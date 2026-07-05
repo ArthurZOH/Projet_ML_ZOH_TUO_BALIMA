@@ -1,0 +1,16 @@
+# Jamais dans l'image : dataset, environnements, git, caches
+.git/
+.github/
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+data/
+docker-data/
+.pytest_cache/
+.ipynb_checkpoints/
+.vscode/
+.idea/
+*.md
+tests/
