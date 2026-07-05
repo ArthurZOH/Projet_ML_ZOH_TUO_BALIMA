@@ -1,0 +1,41 @@
+# --- Environnements virtuels Python ---
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+
+# --- Données volumineuses (ne jamais pousser le dataset Kaggle) ---
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# --- Modèles entraînés (fichiers lourds .h5, .keras, .pt) ---
+models/*
+!models/.gitkeep
+
+# --- Fichiers d'environnement / secrets ---
+.env
+*.env.local
+
+# --- IDE / éditeurs ---
+.vscode/
+.idea/
+*.swp
+
+# --- Système ---
+.DS_Store
+Thumbs.db
+
+# --- Docker (volumes locaux éventuels) ---
+docker-data/
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- Tests / couverture ---
+.pytest_cache/
+.coverage
+htmlcov/

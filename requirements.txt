@@ -1,0 +1,4 @@
+# Dépendances de base (dev/tests) -- l'étape "choix techniques" ajoutera
+# les librairies de scraping, Deep Learning et interface (Requests/Selenium,
+# TensorFlow, Streamlit ou Flask, etc.)
+pytest==8.2.2
