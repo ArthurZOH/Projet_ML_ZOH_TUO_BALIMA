@@ -9,3 +9,9 @@ streamlit==1.46.0
 # Scraping Jumia (Étudiant A)
 requests==2.34.2
 beautifulsoup4==4.15.0
+
+# Épinglées : dépendances de streamlit (calcul + affichage images) dont les
+# versions récentes ne fournissent plus de binaires Python 3.11. Versions
+# compatibles 3.11 et TensorFlow (modèle Étudiant B).
+numpy==1.26.4
+pillow==10.4.0
