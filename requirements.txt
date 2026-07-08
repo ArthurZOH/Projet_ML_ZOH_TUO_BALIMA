@@ -5,3 +5,7 @@ pytest==8.2.2
 
 # Interface web (Étudiant C)
 streamlit==1.46.0
+
+# Scraping Jumia (Étudiant A)
+requests==2.34.2
+beautifulsoup4==4.15.0

@@ -1,6 +1,6 @@
-"""EcoSort-Search — interface Streamlit (squelette).
+"""EcoSort-Search — interface Streamlit.
 
-Flux : saisie d'un produit -> résultats Jumia (mock pour l'instant)
+Flux : saisie d'un produit -> résultats Jumia (scraper Étudiant A)
 -> sélection -> prédiction de la matière (mock) -> écran coloré
 selon la poubelle correspondante.
 
@@ -12,11 +12,20 @@ from pathlib import Path
 
 import streamlit as st
 
-# Permet d'importer utils/ quand on lance `streamlit run webapp/app.py`
+# Permet d'importer utils/ et scraping/ quand on lance `streamlit run webapp/app.py`
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from scraping.scraper import (  # noqa: E402
+    JumiaScraper,
+    NoResultsError,
+    PageUnavailableError,
+    ScraperError,
+    ScraperTimeoutError,
+)
 from utils.categories import BINS, CLASS_TO_BIN  # noqa: E402
-from webapp.mocks import mock_predict, mock_search  # noqa: E402
+from webapp.mocks import mock_predict  # noqa: E402
+
+IMAGE_PLACEHOLDER = "https://placehold.co/200x200?text=Image"
 
 st.set_page_config(page_title="EcoSort-Search", page_icon="♻️", layout="centered")
 
@@ -62,6 +71,26 @@ def show_bin(bin_key: str) -> None:
         st.rerun()
 
 
+@st.cache_data(ttl=600, show_spinner=False)
+def search_jumia(keyword: str) -> list[dict]:
+    """Recherche sur Jumia via le scraper (Étudiant A) et adapte les
+    champs (nom/prix/image/lien) au format attendu par l'interface.
+
+    Le cache (10 min) évite de re-scraper Jumia à chaque interaction
+    Streamlit (chaque clic relance le script en entier).
+    """
+    produits = JumiaScraper().search(keyword)
+    return [
+        {
+            "name": p.nom,
+            "price": p.prix or "Prix non disponible",
+            "image_url": p.image or IMAGE_PLACEHOLDER,
+            "url": p.lien,
+        }
+        for p in produits
+    ]
+
+
 def main() -> None:
     st.title("♻️ EcoSort-Search")
     st.caption("Trouvez la bonne poubelle pour n'importe quel produit.")
@@ -85,10 +114,18 @@ def main() -> None:
         st.info("Saisissez un nom de produit pour lancer la recherche sur Jumia.")
         return
 
-    results = mock_search(keyword)  # TODO: scraper réel (Étudiant A)
-    if not results:
-        st.warning("Aucun résultat trouvé. Essayez un autre mot-clé.")
-        return
+    with st.spinner("Recherche sur Jumia…"):
+        try:
+            results = search_jumia(keyword)
+        except NoResultsError:
+            st.warning(f"Aucun résultat trouvé pour « {keyword} ». Essayez un autre mot-clé.")
+            return
+        except ScraperTimeoutError:
+            st.error("Jumia met trop de temps à répondre. Réessayez dans un instant.")
+            return
+        except (PageUnavailableError, ScraperError):
+            st.error("Jumia est indisponible pour le moment. Réessayez plus tard.")
+            return
 
     st.subheader(f"Résultats pour « {keyword} »")
     for i, product in enumerate(results):
@@ -105,3 +142,4 @@ def main() -> None:
 
 
 main()
+
