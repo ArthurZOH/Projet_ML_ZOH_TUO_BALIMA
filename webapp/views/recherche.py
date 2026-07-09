@@ -91,7 +91,7 @@ def _ecran_resultat(selected: dict) -> None:
     st.markdown(
         f"""
         <style>
-        .stApp {{ background-color: {bin_info["color"]}; }}
+        .stApp {{ background: {bin_info["color"]} !important; }}
         .ecosort-result {{ color: {bin_info["text_color"]}; }}
         </style>
         <div class="ecosort-result">
@@ -132,9 +132,9 @@ def render() -> None:
         return
 
     ui.hero(
-        "♻️ EcoSort-Search",
-        "Cherchez un produit, on vous dit dans quelle poubelle le jeter.",
-        badge="Projet ISE2 — tri sélectif assisté par IA",
+        "Cherchez. Triez. <span class='eco-highlight'>Recyclez.</span>",
+        "L'IA qui trouve la bonne poubelle pour chaque produit Jumia.",
+        badge="♻️ EcoSort-Search — projet ISE2",
     )
 
     with st.form("recherche", border=False):
@@ -193,7 +193,10 @@ def render() -> None:
     if demo:
         st.info("🧪 Mode démo actif : produits factices, aucune requête vers Jumia.")
 
-    st.subheader(f"Résultats pour « {last_search} »")
+    ui.section(
+        f"Résultats pour « {last_search} »",
+        "Cliquez sur un produit pour découvrir sa poubelle.",
+    )
 
     # Grille de cartes produits (3 colonnes)
     for ligne in range(0, len(results), 3):

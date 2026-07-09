@@ -38,10 +38,8 @@ def render() -> None:
     else:
         st.progress(1.0, text="Niveau maximum atteint — bravo ! 🌳")
 
-    st.divider()
-
     # --- Répartition par poubelle ---
-    st.subheader("Répartition par poubelle")
+    ui.section("Répartition par poubelle", "Vos tris de la session, poubelle par poubelle.")
     compteur = compter_par_poubelle(history)
     df = pd.DataFrame(
         {

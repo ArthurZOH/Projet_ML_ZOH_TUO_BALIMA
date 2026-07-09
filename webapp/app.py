@@ -62,3 +62,4 @@ with st.sidebar:
             st.caption(f"{BINS[entree['bin_key']]['emoji']} {entree['name']}")
 
 pages.run()
+ui.footer()
