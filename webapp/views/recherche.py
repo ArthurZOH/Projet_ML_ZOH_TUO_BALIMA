@@ -1,0 +1,207 @@
+"""Page Recherche & tri : le cœur de l'application.
+
+Flux : mot-clé -> résultats Jumia (ou mode démo) -> sélection ->
+prédiction de la matière -> écran coloré selon la poubelle.
+"""
+
+import streamlit as st
+
+from scraping.scraper import (
+    JumiaScraper,
+    NoResultsError,
+    PageUnavailableError,
+    ScraperError,
+    ScraperTimeoutError,
+)
+from utils.categories import BINS, CLASS_TO_BIN
+from utils.electronique import detect_electronique
+from webapp import ui
+from webapp.mocks import mock_predict, mock_search
+
+IMAGE_PLACEHOLDER = "https://placehold.co/200x200?text=Image"
+
+SUGGESTIONS = [
+    "bouteille d'eau", "écouteurs bluetooth", "cahier", "bocal de confiture",
+    "canette", "chargeur usb",
+]
+
+MAX_RECHERCHES_RECENTES = 6
+
+
+@st.cache_data(ttl=600, show_spinner=False)
+def search_jumia(keyword: str, max_results: int) -> list[dict]:
+    """Recherche sur Jumia via le scraper (Étudiant A) et adapte les
+    champs (nom/prix/image/lien) au format attendu par l'interface.
+
+    Le cache (10 min) évite de re-scraper Jumia à chaque interaction
+    Streamlit (chaque clic relance le script en entier).
+    """
+    produits = JumiaScraper().search(keyword, max_results=max_results)
+    return [
+        {
+            "name": p.nom,
+            "price": p.prix or "Prix non disponible",
+            "image_url": p.image or IMAGE_PLACEHOLDER,
+            "url": p.lien,
+        }
+        for p in produits
+    ]
+
+
+def _lancer_recherche(keyword: str) -> None:
+    """Enregistre la recherche et met à jour la liste des recherches récentes."""
+    keyword = keyword.strip()
+    if not keyword:
+        return
+    st.session_state["last_search"] = keyword
+    recentes = st.session_state.setdefault("recent_searches", [])
+    if keyword in recentes:
+        recentes.remove(keyword)
+    recentes.append(keyword)
+    del recentes[:-MAX_RECHERCHES_RECENTES]
+
+
+def _sur_pill(cle: str) -> None:
+    """Callback des pills (suggestions / recherches récentes) : lance la
+    recherche puis désélectionne la pill pour permettre un nouveau clic."""
+    valeur = st.session_state.get(cle)
+    if valeur:
+        _lancer_recherche(valeur)
+        st.session_state[cle] = None
+
+
+def _ecran_resultat(selected: dict) -> None:
+    """Écran coloré aux couleurs de la poubelle + récapitulatif produit."""
+    if detect_electronique(selected["name"]):
+        bin_key, predicted_class = "electronique", None
+    else:
+        predicted_class = mock_predict(selected)  # TODO: modèle réel (Étudiant B)
+        bin_key = CLASS_TO_BIN.get(predicted_class, "marron")
+
+    # Enregistre le tri une seule fois (pas à chaque rerun de l'écran)
+    if not st.session_state.get("history_recorded"):
+        st.session_state.setdefault("history", []).append(
+            {"name": selected["name"], "bin_key": bin_key}
+        )
+        st.session_state["history_recorded"] = True
+        st.toast("+10 éco-points ! 🌱")
+        st.balloons()
+
+    bin_info = BINS[bin_key]
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{ background-color: {bin_info["color"]}; }}
+        .ecosort-result {{ color: {bin_info["text_color"]}; }}
+        </style>
+        <div class="ecosort-result">
+            <div class="eco-emoji">{bin_info["emoji"]}</div>
+            <h1>{bin_info["label"]}</h1>
+            <p style="font-size: 1.2rem;">{bin_info["consigne"]}</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # Récapitulatif du produit analysé, sur carte blanche pour rester lisible
+    with st.container(border=True):
+        col_img, col_info = st.columns([1, 3])
+        with col_img:
+            st.image(selected["image_url"], width=90)
+        with col_info:
+            st.markdown(f"**{selected['name']}**")
+            ui.prix(selected["price"])
+            if predicted_class is not None:
+                st.caption(f"Matière détectée : {predicted_class} (modèle de démonstration)")
+            else:
+                st.caption("Détecté comme appareil électronique (D3E)")
+            st.markdown(f"[Voir le produit sur Jumia ↗]({selected['url']})")
+
+    if st.button("🔄 Nouvelle recherche", use_container_width=True):
+        # On ne vide pas toute la session : historique, recherches récentes
+        # et derniers résultats doivent survivre au retour en arrière.
+        st.session_state.pop("selected_product", None)
+        st.session_state.pop("history_recorded", None)
+        st.rerun()
+
+
+def render() -> None:
+    selected = st.session_state.get("selected_product")
+    if selected is not None:
+        _ecran_resultat(selected)
+        return
+
+    ui.hero(
+        "♻️ EcoSort-Search",
+        "Cherchez un produit, on vous dit dans quelle poubelle le jeter.",
+        badge="Projet ISE2 — tri sélectif assisté par IA",
+    )
+
+    with st.form("recherche", border=False):
+        col_champ, col_bouton = st.columns([4, 1], vertical_alignment="bottom")
+        with col_champ:
+            keyword = st.text_input(
+                "Quel produit voulez-vous jeter ?",
+                placeholder="Ex. : bouteille d'eau",
+            )
+        with col_bouton:
+            submitted = st.form_submit_button("🔍 Chercher", use_container_width=True)
+    if submitted:
+        _lancer_recherche(keyword)
+
+    st.pills(
+        "💡 Suggestions",
+        SUGGESTIONS,
+        key="pill_suggestions",
+        on_change=_sur_pill,
+        args=("pill_suggestions",),
+    )
+    recentes = st.session_state.get("recent_searches", [])
+    if recentes:
+        st.pills(
+            "🕘 Recherches récentes",
+            list(reversed(recentes)),
+            key="pill_recentes",
+            on_change=_sur_pill,
+            args=("pill_recentes",),
+        )
+
+    last_search = st.session_state.get("last_search")
+    if not last_search:
+        st.info("Saisissez un produit, ou piochez dans les suggestions ci-dessus.")
+        return
+
+    demo = st.session_state.get("demo_mode", False)
+    max_results = st.session_state.get("max_results", 5)
+
+    with st.spinner(f"Recherche de « {last_search} »…"):
+        if demo:
+            results = mock_search(last_search)[:max_results]
+        else:
+            try:
+                results = search_jumia(last_search, max_results)
+            except NoResultsError:
+                st.warning(f"Aucun résultat trouvé pour « {last_search} ». Essayez un autre mot-clé.")
+                return
+            except ScraperTimeoutError:
+                st.error("Jumia met trop de temps à répondre. Réessayez dans un instant.")
+                return
+            except (PageUnavailableError, ScraperError):
+                st.error("Jumia est indisponible pour le moment. Réessayez plus tard.")
+                return
+
+    if demo:
+        st.info("🧪 Mode démo actif : produits factices, aucune requête vers Jumia.")
+
+    st.subheader(f"Résultats pour « {last_search} »")
+
+    # Grille de cartes produits (3 colonnes)
+    for ligne in range(0, len(results), 3):
+        colonnes = st.columns(3)
+        for col, (i, product) in zip(
+            colonnes, enumerate(results[ligne:ligne + 3], start=ligne)
+        ):
+            with col:
+                if ui.carte_produit(product, key=f"choose_{i}"):
+                    st.session_state["selected_product"] = product
+                    st.rerun()
