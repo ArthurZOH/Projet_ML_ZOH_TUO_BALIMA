@@ -1,20 +1,20 @@
-# Thème EcoSort-Search — palette « coffee shop » : fond crème, panneaux
-# chocolat, accents caramel (appliqué automatiquement par Streamlit)
+# Thème EcoSort-Search — sombre premium, accents orange incandescents
+# (référence : landing page Velocity — appliqué automatiquement par Streamlit)
 
 [theme]
-base = "light"
-primaryColor = "#6F4E37"
-backgroundColor = "#F2E3D2"
-secondaryBackgroundColor = "#EBDCC9"
-textColor = "#33261B"
+base = "dark"
+primaryColor = "#E8722C"
+backgroundColor = "#140D08"
+secondaryBackgroundColor = "#221710"
+textColor = "#F5EDE6"
 font = "sans serif"
 
-# Barre latérale sombre, comme le header/footer de la référence
+# Barre latérale encore plus sombre, accents ambrés
 [theme.sidebar]
-backgroundColor = "#241A12"
-secondaryBackgroundColor = "#3A2C21"
-textColor = "#F2E3D2"
-primaryColor = "#C58C5C"
+backgroundColor = "#0F0A06"
+secondaryBackgroundColor = "#221710"
+textColor = "#F5EDE6"
+primaryColor = "#FF8C42"
 
 [browser]
 gatherUsageStats = false

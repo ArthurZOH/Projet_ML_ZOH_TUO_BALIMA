@@ -1,7 +1,7 @@
 """Composants visuels partagés de l'interface (CSS global, hero, cartes, footer).
 
-Direction artistique : palette « coffee shop » — fond crème, panneaux
-chocolat foncé, accents caramel. Structure : hero centré avec mot surligné,
+Direction artistique : sombre premium façon landing page « Velocity » —
+fond noir chaud, halos orange incandescents, hero avec horizon lumineux,
 sections centrées avec sous-titre, cartes arrondies, footer en colonnes.
 Tout le CSS custom du projet vit ici pour garder les vues lisibles.
 """
@@ -16,73 +16,74 @@ html, body, .stApp, [data-testid="stSidebar"] {
     font-family: 'Poppins', 'Segoe UI', sans-serif;
 }
 
-/* Fond général : halo caramel très discret en haut de page */
+/* Fond général : halo ambré très discret en haut de page */
 .stApp {
     background-image:
-        radial-gradient(ellipse 80% 40% at 50% 0%, rgba(197, 140, 92, 0.18), transparent 60%);
+        radial-gradient(ellipse 80% 40% at 50% 0%, rgba(232, 114, 44, 0.14), transparent 60%);
 }
 
 /* Largeur de lecture confortable malgré le layout wide */
 div[data-testid="stMainBlockContainer"] { max-width: 1100px; }
 
-/* --- Hero : panneau chocolat avec halo caramel, façon vitrine café --- */
+/* --- Hero : panneau noir chaud avec halo et horizon incandescent --- */
 .eco-hero {
     background:
-        radial-gradient(ellipse 60% 80% at 25% 0%, rgba(197, 140, 92, 0.38), transparent 60%),
-        linear-gradient(160deg, #3A2A1E 0%, #241A12 75%);
-    border: 1px solid rgba(197, 140, 92, 0.3);
-    color: #F7ECDF;
+        radial-gradient(ellipse 70% 90% at 50% 115%, rgba(255, 140, 66, 0.5), transparent 60%),
+        linear-gradient(160deg, #241710 0%, #140D08 70%);
+    border: 1px solid rgba(255, 140, 66, 0.28);
+    box-shadow: 0 30px 60px -30px rgba(255, 140, 66, 0.45);
+    color: #F5EDE6;
     padding: 2.8rem 2.4rem;
     border-radius: 20px;
     margin-bottom: 1.6rem;
     text-align: center;
 }
 .eco-hero h1 {
-    color: #F7ECDF;
+    color: #F5EDE6;
     margin: 0;
     font-weight: 800;
     font-size: 2.6rem;
     line-height: 1.15;
 }
-.eco-hero p { margin: 0.7rem 0 0 0; font-size: 1.1rem; color: #E3C8A8; }
+.eco-hero p { margin: 0.7rem 0 0 0; font-size: 1.1rem; color: #E0BFA3; }
 .eco-highlight {
-    background: #8B5E3C;
+    background: #E8722C;
     padding: 0 0.45rem;
     border-radius: 10px;
-    box-shadow: 0 0 24px rgba(197, 140, 92, 0.55);
+    box-shadow: 0 0 26px rgba(255, 140, 66, 0.65);
 }
 .eco-badge {
     display: inline-block;
-    border: 1px solid rgba(197, 140, 92, 0.55);
-    color: #E3C8A8;
+    border: 1px solid rgba(255, 140, 66, 0.5);
+    color: #F0C9A8;
     padding: 0.25rem 0.9rem;
     border-radius: 999px;
     font-size: 0.85rem;
     margin-bottom: 1rem;
 }
 
-/* --- Titres de section centrés avec sous-titre, façon vitrine --- */
+/* --- Titres de section centrés avec sous-titre, façon landing page --- */
 .eco-section { text-align: center; margin: 2.2rem 0 1.2rem 0; }
 .eco-section h2 {
-    color: #33261B;
+    color: #F5EDE6;
     font-weight: 800;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     font-size: 1.45rem;
     margin: 0;
 }
-.eco-section p { color: #8B6F55; margin: 0.3rem 0 0 0; font-size: 0.95rem; }
+.eco-section p { color: #C79A78; margin: 0.3rem 0 0 0; font-size: 0.95rem; }
 
-/* --- Cartes (conteneurs avec bordure) : crème clair, ombre chaude au survol --- */
+/* --- Cartes (conteneurs avec bordure) : sombres, halo ambré au survol --- */
 div[data-testid="stVerticalBlockBorderWrapper"] {
-    background-color: #F9F0E3;
-    border: 1px solid rgba(80, 50, 20, 0.16);
+    background-color: #1F1610;
+    border: 1px solid rgba(255, 140, 66, 0.18);
     border-radius: 18px;
     transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
 }
 div[data-testid="stVerticalBlockBorderWrapper"]:hover {
-    box-shadow: 0 10px 28px rgba(111, 78, 55, 0.28);
-    border-color: rgba(111, 78, 55, 0.45);
+    box-shadow: 0 0 30px rgba(255, 140, 66, 0.3);
+    border-color: rgba(255, 140, 66, 0.55);
     transform: translateY(-4px);
 }
 /* Images des cartes : hauteur homogène sans déformation, coins doux */
@@ -93,7 +94,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] img {
     background: #FFFFFF;
 }
 
-.eco-prix { color: #6F4E37; font-weight: 700; font-size: 1.05rem; }
+.eco-prix { color: #FFA45C; font-weight: 700; font-size: 1.05rem; }
 
 .stButton button, .stFormSubmitButton button, .stDownloadButton button {
     border-radius: 12px;
@@ -113,7 +114,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] img {
     padding: 1.4rem;
     margin-bottom: 1rem;
     min-height: 210px;
-    box-shadow: 0 6px 22px rgba(58, 42, 30, 0.25);
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.45);
 }
 .eco-bin-card h3 { margin: 0.3rem 0; color: inherit; }
 .eco-bin-card .eco-emoji { font-size: 2.2rem; }
@@ -126,10 +127,10 @@ div[data-testid="stVerticalBlockBorderWrapper"] img {
     font-size: 0.8rem;
 }
 
-/* --- Footer chocolat en colonnes, façon site vitrine --- */
+/* --- Footer noir chaud en colonnes, façon landing page --- */
 .eco-footer {
-    background: #241A12;
-    border: 1px solid rgba(197, 140, 92, 0.25);
+    background: #0F0A06;
+    border: 1px solid rgba(255, 140, 66, 0.2);
     border-radius: 20px;
     padding: 2rem 2.2rem 1rem 2.2rem;
     margin-top: 3rem;
@@ -139,9 +140,9 @@ div[data-testid="stVerticalBlockBorderWrapper"] img {
     grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     gap: 1.4rem;
 }
-.eco-footer h4 { color: #C58C5C; margin: 0 0 0.5rem 0; font-size: 0.95rem; }
+.eco-footer h4 { color: #FF8C42; margin: 0 0 0.5rem 0; font-size: 0.95rem; }
 .eco-footer p, .eco-footer a, .eco-footer li {
-    color: #E8D5BE;
+    color: #E8CDB8;
     font-size: 0.85rem;
     text-decoration: none;
 }
@@ -150,9 +151,9 @@ div[data-testid="stVerticalBlockBorderWrapper"] img {
 .eco-footer a:hover { color: #FFFFFF; }
 .eco-footer-bottom {
     text-align: center;
-    color: #A08668;
+    color: #A87F5E;
     font-size: 0.78rem;
-    border-top: 1px solid rgba(197, 140, 92, 0.2);
+    border-top: 1px solid rgba(255, 140, 66, 0.15);
     margin-top: 1.4rem;
     padding-top: 0.9rem;
 }
@@ -165,7 +166,7 @@ def inject_css() -> None:
 
 
 def hero(titre: str, sous_titre: str, badge: str | None = None) -> None:
-    """Bandeau d'en-tête façon vitrine. `titre` peut contenir un
+    """Bandeau d'en-tête façon landing page. `titre` peut contenir un
     <span class='eco-highlight'>mot surligné</span>."""
     badge_html = f'<div><span class="eco-badge">{badge}</span></div>' if badge else ""
     st.markdown(
@@ -181,7 +182,7 @@ def hero(titre: str, sous_titre: str, badge: str | None = None) -> None:
 
 
 def section(titre: str, sous_titre: str = "") -> None:
-    """Titre de section centré avec sous-titre, façon vitrine."""
+    """Titre de section centré avec sous-titre, façon landing page."""
     sous_titre_html = f"<p>{sous_titre}</p>" if sous_titre else ""
     st.markdown(
         f'<div class="eco-section"><h2>{titre}</h2>{sous_titre_html}</div>',
@@ -203,7 +204,7 @@ def carte_produit(product: dict, key: str) -> bool:
 
 
 def footer() -> None:
-    """Footer commun à toutes les pages (colonnes façon site vitrine)."""
+    """Footer commun à toutes les pages (colonnes façon landing page)."""
     st.markdown(
         """
         <div class="eco-footer">
