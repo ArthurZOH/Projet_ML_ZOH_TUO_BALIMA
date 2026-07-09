@@ -17,4 +17,4 @@ numpy==1.26.4
 pillow==10.4.0
 pandas==2.2.3
 pyarrow==18.1.0
-charset-normalizer==3.3.2
+charset-normalizer==3.4.4

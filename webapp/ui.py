@@ -1,6 +1,7 @@
 """Composants visuels partagés de l'interface (CSS global, hero, cartes, footer).
 
-Direction artistique : thème sombre premium, halos verts lumineux,
+Direction artistique : palette « coffee shop » — fond crème, panneaux
+chocolat foncé, accents caramel. Structure : hero centré avec mot surligné,
 sections centrées avec sous-titre, cartes arrondies, footer en colonnes.
 Tout le CSS custom du projet vit ici pour garder les vues lisibles.
 """
@@ -15,45 +16,45 @@ html, body, .stApp, [data-testid="stSidebar"] {
     font-family: 'Poppins', 'Segoe UI', sans-serif;
 }
 
-/* Fond général : halo vert très discret en haut de page */
+/* Fond général : halo caramel très discret en haut de page */
 .stApp {
     background-image:
-        radial-gradient(ellipse 80% 40% at 50% 0%, rgba(76, 175, 80, 0.14), transparent 60%);
+        radial-gradient(ellipse 80% 40% at 50% 0%, rgba(197, 140, 92, 0.18), transparent 60%);
 }
 
 /* Largeur de lecture confortable malgré le layout wide */
 div[data-testid="stMainBlockContainer"] { max-width: 1100px; }
 
-/* --- Hero : panneau sombre avec halo lumineux, façon landing page --- */
+/* --- Hero : panneau chocolat avec halo caramel, façon vitrine café --- */
 .eco-hero {
     background:
-        radial-gradient(ellipse 60% 80% at 25% 0%, rgba(76, 175, 80, 0.35), transparent 60%),
-        linear-gradient(160deg, #16261B 0%, #0F1511 75%);
-    border: 1px solid rgba(139, 195, 74, 0.22);
-    color: #FFFFFF;
+        radial-gradient(ellipse 60% 80% at 25% 0%, rgba(197, 140, 92, 0.38), transparent 60%),
+        linear-gradient(160deg, #3A2A1E 0%, #241A12 75%);
+    border: 1px solid rgba(197, 140, 92, 0.3);
+    color: #F7ECDF;
     padding: 2.8rem 2.4rem;
     border-radius: 20px;
     margin-bottom: 1.6rem;
     text-align: center;
 }
 .eco-hero h1 {
-    color: #FFFFFF;
+    color: #F7ECDF;
     margin: 0;
     font-weight: 800;
     font-size: 2.6rem;
     line-height: 1.15;
 }
-.eco-hero p { margin: 0.7rem 0 0 0; font-size: 1.1rem; color: #C8E6C9; }
+.eco-hero p { margin: 0.7rem 0 0 0; font-size: 1.1rem; color: #E3C8A8; }
 .eco-highlight {
-    background: #2E7D32;
+    background: #8B5E3C;
     padding: 0 0.45rem;
     border-radius: 10px;
-    box-shadow: 0 0 24px rgba(76, 175, 80, 0.55);
+    box-shadow: 0 0 24px rgba(197, 140, 92, 0.55);
 }
 .eco-badge {
     display: inline-block;
-    border: 1px solid rgba(139, 195, 74, 0.45);
-    color: #A5D6A7;
+    border: 1px solid rgba(197, 140, 92, 0.55);
+    color: #E3C8A8;
     padding: 0.25rem 0.9rem;
     border-radius: 999px;
     font-size: 0.85rem;
@@ -63,25 +64,25 @@ div[data-testid="stMainBlockContainer"] { max-width: 1100px; }
 /* --- Titres de section centrés avec sous-titre, façon vitrine --- */
 .eco-section { text-align: center; margin: 2.2rem 0 1.2rem 0; }
 .eco-section h2 {
-    color: #FFFFFF;
+    color: #33261B;
     font-weight: 800;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     font-size: 1.45rem;
     margin: 0;
 }
-.eco-section p { color: #A5D6A7; margin: 0.3rem 0 0 0; font-size: 0.95rem; }
+.eco-section p { color: #8B6F55; margin: 0.3rem 0 0 0; font-size: 0.95rem; }
 
-/* --- Cartes (conteneurs avec bordure) : sombres, halo vert au survol --- */
+/* --- Cartes (conteneurs avec bordure) : crème clair, ombre chaude au survol --- */
 div[data-testid="stVerticalBlockBorderWrapper"] {
-    background-color: #18231B;
-    border: 1px solid rgba(139, 195, 74, 0.18);
+    background-color: #F9F0E3;
+    border: 1px solid rgba(80, 50, 20, 0.16);
     border-radius: 18px;
     transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
 }
 div[data-testid="stVerticalBlockBorderWrapper"]:hover {
-    box-shadow: 0 0 28px rgba(76, 175, 80, 0.28);
-    border-color: rgba(139, 195, 74, 0.5);
+    box-shadow: 0 10px 28px rgba(111, 78, 55, 0.28);
+    border-color: rgba(111, 78, 55, 0.45);
     transform: translateY(-4px);
 }
 /* Images des cartes : hauteur homogène sans déformation, coins doux */
@@ -92,7 +93,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] img {
     background: #FFFFFF;
 }
 
-.eco-prix { color: #8BC34A; font-weight: 700; font-size: 1.05rem; }
+.eco-prix { color: #6F4E37; font-weight: 700; font-size: 1.05rem; }
 
 .stButton button, .stFormSubmitButton button, .stDownloadButton button {
     border-radius: 12px;
@@ -112,7 +113,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] img {
     padding: 1.4rem;
     margin-bottom: 1rem;
     min-height: 210px;
-    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 6px 22px rgba(58, 42, 30, 0.25);
 }
 .eco-bin-card h3 { margin: 0.3rem 0; color: inherit; }
 .eco-bin-card .eco-emoji { font-size: 2.2rem; }
@@ -125,10 +126,10 @@ div[data-testid="stVerticalBlockBorderWrapper"] img {
     font-size: 0.8rem;
 }
 
-/* --- Footer sombre en colonnes, façon site vitrine --- */
+/* --- Footer chocolat en colonnes, façon site vitrine --- */
 .eco-footer {
-    background: #0B120D;
-    border: 1px solid rgba(139, 195, 74, 0.15);
+    background: #241A12;
+    border: 1px solid rgba(197, 140, 92, 0.25);
     border-radius: 20px;
     padding: 2rem 2.2rem 1rem 2.2rem;
     margin-top: 3rem;
@@ -138,9 +139,9 @@ div[data-testid="stVerticalBlockBorderWrapper"] img {
     grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
     gap: 1.4rem;
 }
-.eco-footer h4 { color: #8BC34A; margin: 0 0 0.5rem 0; font-size: 0.95rem; }
+.eco-footer h4 { color: #C58C5C; margin: 0 0 0.5rem 0; font-size: 0.95rem; }
 .eco-footer p, .eco-footer a, .eco-footer li {
-    color: #C8E6C9;
+    color: #E8D5BE;
     font-size: 0.85rem;
     text-decoration: none;
 }
@@ -149,9 +150,9 @@ div[data-testid="stVerticalBlockBorderWrapper"] img {
 .eco-footer a:hover { color: #FFFFFF; }
 .eco-footer-bottom {
     text-align: center;
-    color: #7CA982;
+    color: #A08668;
     font-size: 0.78rem;
-    border-top: 1px solid rgba(139, 195, 74, 0.12);
+    border-top: 1px solid rgba(197, 140, 92, 0.2);
     margin-top: 1.4rem;
     padding-top: 0.9rem;
 }
@@ -164,7 +165,7 @@ def inject_css() -> None:
 
 
 def hero(titre: str, sous_titre: str, badge: str | None = None) -> None:
-    """Bandeau d'en-tête façon landing page. `titre` peut contenir un
+    """Bandeau d'en-tête façon vitrine. `titre` peut contenir un
     <span class='eco-highlight'>mot surligné</span>."""
     badge_html = f'<div><span class="eco-badge">{badge}</span></div>' if badge else ""
     st.markdown(

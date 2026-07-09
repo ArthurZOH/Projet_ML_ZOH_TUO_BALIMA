@@ -1,13 +1,20 @@
-# Thème EcoSort-Search — sombre premium avec accents verts lumineux
-# (appliqué automatiquement par Streamlit)
+# Thème EcoSort-Search — palette « coffee shop » : fond crème, panneaux
+# chocolat, accents caramel (appliqué automatiquement par Streamlit)
 
 [theme]
-base = "dark"
-primaryColor = "#4CAF50"
-backgroundColor = "#0F1511"
-secondaryBackgroundColor = "#18231B"
-textColor = "#E8F5E9"
+base = "light"
+primaryColor = "#6F4E37"
+backgroundColor = "#F2E3D2"
+secondaryBackgroundColor = "#EBDCC9"
+textColor = "#33261B"
 font = "sans serif"
+
+# Barre latérale sombre, comme le header/footer de la référence
+[theme.sidebar]
+backgroundColor = "#241A12"
+secondaryBackgroundColor = "#3A2C21"
+textColor = "#F2E3D2"
+primaryColor = "#C58C5C"
 
 [browser]
 gatherUsageStats = false
