@@ -15,3 +15,4 @@ beautifulsoup4==4.15.0
 # compatibles 3.11 et TensorFlow (modèle Étudiant B).
 numpy==1.26.4
 pillow==10.4.0
+pandas==2.2.3
