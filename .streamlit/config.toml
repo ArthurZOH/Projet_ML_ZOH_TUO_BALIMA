@@ -1,0 +1,12 @@
+# Thème EcoSort-Search — appliqué automatiquement par Streamlit
+# (vert recyclage en couleur principale, fond secondaire vert très pâle)
+
+[theme]
+primaryColor = "#2E7D32"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F1F8E9"
+textColor = "#212121"
+font = "sans serif"
+
+[browser]
+gatherUsageStats = false
