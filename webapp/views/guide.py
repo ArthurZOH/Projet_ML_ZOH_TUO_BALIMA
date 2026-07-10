@@ -41,10 +41,17 @@ def render() -> None:
 
     cles = list(BINS)
     for ligne in range(0, len(cles), 2):
-        colonnes = st.columns(2)
-        for col, cle in zip(colonnes, cles[ligne:ligne + 2]):
-            with col:
-                _carte_poubelle(BINS[cle])
+        groupe = cles[ligne:ligne + 2]
+        if len(groupe) == 2:
+            colonnes = st.columns(2)
+            for col, cle in zip(colonnes, groupe):
+                with col:
+                    _carte_poubelle(BINS[cle])
+        else:
+            # Carte esseulée (nombre impair) : centrée sur la ligne
+            _, milieu, _ = st.columns([1, 2, 1])
+            with milieu:
+                _carte_poubelle(BINS[groupe[0]])
 
     ui.section("⚠️ Les pièges classiques", "Les erreurs de tri les plus fréquentes — à connaître avant de jeter.")
     for titre, reponse in PIEGES:

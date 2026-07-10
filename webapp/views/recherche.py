@@ -145,6 +145,7 @@ def render() -> None:
             keyword = st.text_input(
                 "Quel produit voulez-vous jeter ?",
                 placeholder="Ex. : bouteille d'eau",
+                key="search_input",
             )
         with col_bouton:
             submitted = st.form_submit_button("🔍 Chercher", use_container_width=True)

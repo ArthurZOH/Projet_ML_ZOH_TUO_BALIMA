@@ -27,7 +27,7 @@ st.set_page_config(
     page_title="EcoSort-Search",
     page_icon="♻️",
     layout="wide",
-    menu_items={"about": "EcoSort-Search — projet ISE2 (Alice, Arthur, Yannel)"},
+    menu_items={"about": "EcoSort-Search )"},
 )
 
 # Thème clair/sombre : persiste en session, basculé par le bouton de la navbar

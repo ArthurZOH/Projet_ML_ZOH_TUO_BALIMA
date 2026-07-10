@@ -113,12 +113,47 @@ div[data-testid="stAlert"] {
 }
 div[data-testid="stAlert"] * { color: var(--text-primary) !important; }
 
-/* --- Champs de saisie --- */
-div[data-baseweb="input"] {
-    background: var(--input-bg);
-    border-color: var(--border);
+/* --- Champs de saisie : forcer aussi l'intérieur baseweb (le thème
+   Streamlit du config.toml est figé en sombre) --- */
+div[data-baseweb="input"], div[data-baseweb="base-input"] {
+    background: var(--input-bg) !important;
+    border-color: var(--border) !important;
 }
-div[data-baseweb="input"] input { color: var(--text-primary); }
+div[data-baseweb="input"] input {
+    background: var(--input-bg) !important;
+    color: var(--text-primary) !important;
+    caret-color: var(--accent);
+}
+div[data-baseweb="input"] input::placeholder { color: var(--text-muted) !important; }
+
+/* --- Pills (suggestions / recherches récentes) : suivent le thème actif --- */
+button[data-testid="stBaseButton-pills"],
+button[data-testid="stBaseButton-pillsActive"] {
+    background: var(--bg-card) !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid var(--border-light) !important;
+    border-radius: 40px !important;
+    box-shadow: none !important;
+    transition: all 0.25s;
+}
+button[data-testid^="stBaseButton-pills"] * { color: inherit !important; }
+button[data-testid="stBaseButton-pills"]:hover {
+    background: var(--accent-bg) !important;
+    color: var(--accent) !important;
+    border-color: var(--accent) !important;
+}
+button[data-testid="stBaseButton-pillsActive"] {
+    background: var(--accent-bg) !important;
+    color: var(--accent) !important;
+}
+
+/* --- Libellé du champ de recherche : centré --- */
+.st-key-search_input div[data-testid="stWidgetLabel"] {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.st-key-search_input div[data-testid="stWidgetLabel"] p { text-align: center; }
 
 /* --- Expanders --- */
 [data-testid="stExpander"] details {
