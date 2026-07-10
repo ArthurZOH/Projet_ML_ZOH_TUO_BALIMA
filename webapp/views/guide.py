@@ -45,7 +45,7 @@ def render() -> None:
             with col:
                 _carte_poubelle(BINS[cle])
 
-    ui.section("⚠️ Les pièges classiques", "Les erreurs les plus fréquentes — le quiz vous les fera réviser !")
+    ui.section("⚠️ Les pièges classiques", "Les erreurs de tri les plus fréquentes — à connaître avant de jeter.")
     for titre, reponse in PIEGES:
         with st.expander(titre):
             st.write(reponse)

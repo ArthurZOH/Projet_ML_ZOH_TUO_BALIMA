@@ -1,11 +1,10 @@
 """Mocks temporaires en attendant les modules réels.
 
-- mock_search remplace scraper.search (Étudiant A) : renvoie des produits
-  factices au format convenu (nom, prix, image, lien).
 - mock_predict remplace l'inférence du modèle (Étudiant B) : renvoie une
   classe du dataset Kaggle choisie de façon déterministe.
+- mock_search (scraper) a été retiré : le vrai scraper est intégré.
 
-À supprimer lors de l'intégration (J7 du plan de travail).
+À supprimer lors de l'intégration du modèle réel.
 """
 
 # Format de résultat convenu avec l'Étudiant A (scraper Jumia)
@@ -38,13 +37,6 @@ MOCK_PRODUCTS = [
 
 # Classes du dataset Kaggle, dans l'ordre des produits mock ci-dessus
 _MOCK_CLASSES = ["plastic", "glass", "paper", "trash"]
-
-
-def mock_search(keyword: str) -> list[dict]:
-    """Simule scraper.search(keyword) : 3 à 5 produits Jumia."""
-    if not keyword.strip():
-        return []
-    return MOCK_PRODUCTS
 
 
 def mock_predict(product: dict) -> str:

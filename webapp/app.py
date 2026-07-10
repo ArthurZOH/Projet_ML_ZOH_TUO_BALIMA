@@ -1,11 +1,12 @@
 """EcoSort-Search — point d'entrée Streamlit.
 
-Navigation horizontale : une barre de boutons coulissants en haut de page
-(st.segmented_control) route directement vers les 5 vues :
+Page de garde (connexion requise), puis navigation horizontale : une barre
+de boutons coulissants en haut de page (st.segmented_control) route
+directement vers les 4 vues :
   - Recherche & tri : mot-clé -> Jumia -> matière -> poubelle colorée
   - Mes statistiques : éco-points, niveau, répartition par poubelle
-  - Guide du tri / Quiz / À propos
-La sidebar ne garde que les réglages (mode démo, nb résultats, historique).
+  - Guide du tri / À propos
+La sidebar garde les réglages (nb résultats, historique, déconnexion).
 
 Lancement local :  streamlit run webapp/app.py
 """
@@ -19,7 +20,7 @@ import streamlit as st
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from webapp import ui  # noqa: E402
-from webapp.views import apropos, dashboard, guide, quiz, recherche  # noqa: E402
+from webapp.views import apropos, dashboard, guide, login, recherche  # noqa: E402
 
 st.set_page_config(
     page_title="EcoSort-Search",
@@ -32,13 +33,17 @@ st.set_page_config(
 theme = st.session_state.setdefault("theme", "dark")
 ui.inject_css(theme)
 
+# --- Page de garde : rien n'est accessible sans connexion ---
+if not st.session_state.get("utilisateur"):
+    login.render()
+    st.stop()
+
 # Libellé de la navbar -> vue (l'ordre définit l'ordre des boutons)
 VUES = {
-    "🔍 Recherche": recherche.render,
-    "📊 Statistiques": dashboard.render,
-    "🗑️ Guide": guide.render,
-    "🧠 Quiz": quiz.render,
-    "ℹ️ À propos": apropos.render,
+    "🛒 Recherche": recherche.render,
+    "🌱 Statistiques": dashboard.render,
+    "♻️ Guide": guide.render,
+    "👥 À propos": apropos.render,
 }
 LABELS = list(VUES)
 
@@ -62,17 +67,16 @@ with col_theme:
         st.session_state["theme"] = "dark" if theme == "light" else "light"
         st.rerun()
 
-# --- Sidebar : marque + réglages + mini-historique ---
+# --- Sidebar : marque + session + réglages + mini-historique ---
 with st.sidebar:
     st.markdown("## ♻️ EcoSort-Search")
-    st.caption("Le bon geste de tri, produit par produit.")
+    st.caption(f"Connecté : **{st.session_state['utilisateur'].capitalize()}**")
+    if st.button("Se déconnecter", use_container_width=True):
+        st.session_state.pop("utilisateur", None)
+        st.rerun()
+
     st.divider()
     st.slider("Nombre de résultats Jumia", 3, 10, 5, key="max_results")
-    st.toggle(
-        "🧪 Mode démo (sans Jumia)",
-        key="demo_mode",
-        help="Produits factices, aucune requête réseau — pratique pour la démo.",
-    )
 
     historique = st.session_state.get("history", [])
     if historique:

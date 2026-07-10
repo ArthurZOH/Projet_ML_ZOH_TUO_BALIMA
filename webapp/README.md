@@ -2,22 +2,27 @@
 
 **Responsable : Étudiant C**
 
-Interface utilisateur multi-pages (navigation latérale via `st.navigation`) :
+Interface utilisateur avec page de garde (connexion) puis navigation
+horizontale (barre de boutons coulissants, `st.segmented_control`) :
 
 | Fichier | Rôle |
 |---|---|
-| `app.py` | Point d'entrée : navigation, réglages sidebar (mode démo, nb résultats) |
-| `ui.py` | CSS global et composants partagés (hero, cartes produits) |
+| `app.py` | Point d'entrée : login obligatoire, navbar, thème clair/sombre, sidebar |
+| `ui.py` | Design system (variables CSS par thème, hero, cartes, navbar) |
+| `auth.py` | Vérification des identifiants (comptes de démo, testé par pytest) |
+| `views/login.py` | Page de garde : formulaire de connexion |
 | `views/recherche.py` | Recherche Jumia → sélection → poubelle colorée |
 | `views/dashboard.py` | Statistiques de session : éco-points, niveaux, export CSV |
 | `views/guide.py` | Guide visuel des 5 poubelles + pièges classiques |
-| `views/quiz.py` | Quiz du tri (10 questions, données dans `quiz_data.py`) |
 | `views/apropos.py` | Présentation du projet et de l'équipe |
-| `stats.py`, `quiz_data.py` | Logique pure, testée par pytest (`tests/`) |
-| `mocks.py` | Produits factices (mode démo) + prédiction factice |
+| `stats.py` | Logique pure éco-points/niveaux, testée par pytest (`tests/`) |
+| `mocks.py` | Prédiction factice (en attendant le modèle réel) |
 
 Framework retenu : **Streamlit** (port 8501, aligné sur la commande
-`docker run -p 8501:8501` de l'énoncé). Thème : `.streamlit/config.toml`.
+`docker run -p 8501:8501` de l'énoncé). Thème : `.streamlit/config.toml`
+(sombre par défaut) + bascule 🌙/☀️ dans la navbar.
+
+Comptes de démo : `alice`, `arthur`, `yannel` — mot de passe `ecosort2026`.
 
 À faire (étapes suivantes) :
 - [x] Choisir le framework (Streamlit vs Flask/FastAPI)
@@ -25,7 +30,7 @@ Framework retenu : **Streamlit** (port 8501, aligné sur la commande
 - [x] Habillage visuel des 5 catégories de tri (`utils/categories.py`)
 - [x] Dockerfile / docker-compose (squelette)
 - [x] Intégration scraper réel (Étudiant A) -> choix utilisateur
-- [x] Refonte pro : navigation latérale, dashboard, quiz, guide, mode démo
+- [x] Design system (thèmes clair/sombre), navbar horizontale, page de connexion
 - [ ] Chargement du modèle `.h5` dans l'application (Étudiant B, PR #3)
 
 Lancement local :

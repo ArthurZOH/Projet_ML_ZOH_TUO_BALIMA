@@ -16,7 +16,7 @@ from scraping.scraper import (
 from utils.categories import BINS, CLASS_TO_BIN
 from utils.electronique import detect_electronique
 from webapp import ui
-from webapp.mocks import mock_predict, mock_search
+from webapp.mocks import mock_predict
 
 IMAGE_PLACEHOLDER = "https://placehold.co/200x200?text=Image"
 
@@ -172,27 +172,20 @@ def render() -> None:
         st.info("Saisissez un produit, ou piochez dans les suggestions ci-dessus.")
         return
 
-    demo = st.session_state.get("demo_mode", False)
     max_results = st.session_state.get("max_results", 5)
 
     with st.spinner(f"Recherche de « {last_search} »…"):
-        if demo:
-            results = mock_search(last_search)[:max_results]
-        else:
-            try:
-                results = search_jumia(last_search, max_results)
-            except NoResultsError:
-                st.warning(f"Aucun résultat trouvé pour « {last_search} ». Essayez un autre mot-clé.")
-                return
-            except ScraperTimeoutError:
-                st.error("Jumia met trop de temps à répondre. Réessayez dans un instant.")
-                return
-            except (PageUnavailableError, ScraperError):
-                st.error("Jumia est indisponible pour le moment. Réessayez plus tard.")
-                return
-
-    if demo:
-        st.info("🧪 Mode démo actif : produits factices, aucune requête vers Jumia.")
+        try:
+            results = search_jumia(last_search, max_results)
+        except NoResultsError:
+            st.warning(f"Aucun résultat trouvé pour « {last_search} ». Essayez un autre mot-clé.")
+            return
+        except ScraperTimeoutError:
+            st.error("Jumia met trop de temps à répondre. Réessayez dans un instant.")
+            return
+        except (PageUnavailableError, ScraperError):
+            st.error("Jumia est indisponible pour le moment. Réessayez plus tard.")
+            return
 
     ui.section(
         f"Résultats pour « {last_search} »",

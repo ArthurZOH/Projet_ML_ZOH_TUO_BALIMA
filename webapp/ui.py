@@ -139,26 +139,31 @@ div[data-testid="stSegmentedControl"] {
     animation: slideDown 0.5s ease-out;
 }
 div[data-testid="stSegmentedControl"] [data-testid="stButtonGroup"] {
-    background: var(--navbar-bg);
+    background: var(--navbar-bg) !important;
     backdrop-filter: blur(20px);
-    border: 1px solid var(--border-light);
+    border: none !important;
     border-radius: 60px;
     box-shadow: 0 2px 20px var(--navbar-shadow);
     padding: 6px 8px;
+    gap: 4px;
 }
 div[data-testid="stSegmentedControl"] button {
     border-radius: 40px !important;
     border: none !important;
-    background: transparent;
-    color: var(--text-secondary);
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    color: var(--text-secondary) !important;
     font-weight: 500;
     padding: 0.5rem 1.1rem;
     position: relative;
     transition: all 0.25s;
 }
+/* Le libellé hérite toujours de la couleur du bouton (lisible en clair) */
+div[data-testid="stSegmentedControl"] button * { color: inherit !important; }
 div[data-testid="stSegmentedControl"] button:hover {
-    background: var(--accent-bg);
-    color: var(--accent);
+    background: var(--accent-bg) !important;
+    color: var(--accent) !important;
     transform: translateY(-1px);
 }
 /* Onglet actif : fond accent + petit soulignement, comme .nav-link.active */
@@ -166,6 +171,8 @@ div[data-testid="stSegmentedControl"] button[data-testid$="Active"],
 div[data-testid="stSegmentedControl"] button[aria-checked="true"] {
     background: var(--accent-bg) !important;
     color: var(--accent) !important;
+    border: none !important;
+    box-shadow: none !important;
     font-weight: 600;
 }
 div[data-testid="stSegmentedControl"] button[data-testid$="Active"]::after,
