@@ -133,12 +133,10 @@ div[data-baseweb="input"] input { color: var(--text-primary); }
     from { transform: translateY(-24px); opacity: 0; }
     to   { transform: translateY(0);     opacity: 1; }
 }
-div[data-testid="stSegmentedControl"] {
-    display: flex;
-    justify-content: center;
-    animation: slideDown 0.5s ease-out;
-}
-div[data-testid="stSegmentedControl"] [data-testid="stButtonGroup"] {
+/* NB : dans Streamlit 1.46, le segmented control est rendu comme un
+   stButtonGroup (comme les pills) ; on le cible via :has() sur le kind
+   de ses boutons pour ne pas toucher aux pills de suggestions. */
+div[data-testid="stButtonGroup"]:has(button[data-testid^="stBaseButton-segmented_control"]) {
     background: var(--navbar-bg) !important;
     backdrop-filter: blur(20px);
     border: none !important;
@@ -146,8 +144,11 @@ div[data-testid="stSegmentedControl"] [data-testid="stButtonGroup"] {
     box-shadow: 0 2px 20px var(--navbar-shadow);
     padding: 6px 8px;
     gap: 4px;
+    justify-content: center;
+    animation: slideDown 0.5s ease-out;
 }
-div[data-testid="stSegmentedControl"] button {
+button[data-testid="stBaseButton-segmented_control"],
+button[data-testid="stBaseButton-segmented_controlActive"] {
     border-radius: 40px !important;
     border: none !important;
     outline: none !important;
@@ -156,34 +157,20 @@ div[data-testid="stSegmentedControl"] button {
     color: var(--text-secondary) !important;
     font-weight: 500;
     padding: 0.5rem 1.1rem;
-    position: relative;
     transition: all 0.25s;
 }
-/* Le libellé hérite toujours de la couleur du bouton (lisible en clair) */
-div[data-testid="stSegmentedControl"] button * { color: inherit !important; }
-div[data-testid="stSegmentedControl"] button:hover {
+/* Les libellés héritent toujours de la couleur du bouton (lisibles en clair) */
+button[data-testid^="stBaseButton-segmented_control"] * { color: inherit !important; }
+button[data-testid="stBaseButton-segmented_control"]:hover {
     background: var(--accent-bg) !important;
     color: var(--accent) !important;
     transform: translateY(-1px);
 }
-/* Onglet actif : fond accent + petit soulignement, comme .nav-link.active */
-div[data-testid="stSegmentedControl"] button[data-testid$="Active"],
-div[data-testid="stSegmentedControl"] button[aria-checked="true"] {
+/* Onglet actif : simple teinte accentuée, sans bordure ni soulignement */
+button[data-testid="stBaseButton-segmented_controlActive"] {
     background: var(--accent-bg) !important;
     color: var(--accent) !important;
-    border: none !important;
-    box-shadow: none !important;
     font-weight: 600;
-}
-div[data-testid="stSegmentedControl"] button[data-testid$="Active"]::after,
-div[data-testid="stSegmentedControl"] button[aria-checked="true"]::after {
-    content: '';
-    position: absolute;
-    bottom: 3px; left: 50%;
-    transform: translateX(-50%);
-    width: 16px; height: 3px;
-    border-radius: 2px;
-    background: var(--accent);
 }
 
 /* --- Bouton de bascule de thème (rond, rotation au survol) --- */
