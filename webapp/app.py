@@ -1,9 +1,11 @@
 """EcoSort-Search — point d'entrée Streamlit.
 
-Navigation latérale multi-pages (st.navigation) :
+Navigation horizontale : une barre de boutons coulissants en haut de page
+(st.segmented_control) route directement vers les 5 vues :
   - Recherche & tri : mot-clé -> Jumia -> matière -> poubelle colorée
   - Mes statistiques : éco-points, niveau, répartition par poubelle
   - Guide du tri / Quiz / À propos
+La sidebar ne garde que les réglages (mode démo, nb résultats, historique).
 
 Lancement local :  streamlit run webapp/app.py
 """
@@ -28,22 +30,30 @@ st.set_page_config(
 
 ui.inject_css()
 
-pages = st.navigation(
-    {
-        "Application": [
-            st.Page(recherche.render, title="Recherche & tri", icon="🔍", default=True),
-            st.Page(dashboard.render, title="Mes statistiques", icon="📊", url_path="stats"),
-        ],
-        "Découvrir": [
-            st.Page(guide.render, title="Guide du tri", icon="🗑️", url_path="guide"),
-            st.Page(quiz.render, title="Quiz du tri", icon="🧠", url_path="quiz"),
-            st.Page(apropos.render, title="À propos", icon="ℹ️", url_path="a-propos"),
-        ],
-    }
+# Libellé de la navbar -> vue (l'ordre définit l'ordre des boutons)
+VUES = {
+    "🔍 Recherche": recherche.render,
+    "📊 Statistiques": dashboard.render,
+    "🗑️ Guide": guide.render,
+    "🧠 Quiz": quiz.render,
+    "ℹ️ À propos": apropos.render,
+}
+LABELS = list(VUES)
+
+# --- Navbar horizontale : boutons segmentés (glissement animé en CSS).
+# La clé de session fait persister l'onglet actif entre les reruns.
+choix = st.segmented_control(
+    "Navigation",
+    LABELS,
+    default=LABELS[0],
+    key="navbar",
+    label_visibility="collapsed",
 )
 
-# Réglages et mini-historique, sous le menu de navigation
+# --- Sidebar : marque + réglages + mini-historique ---
 with st.sidebar:
+    st.markdown("## ♻️ EcoSort-Search")
+    st.caption("Le bon geste de tri, produit par produit.")
     st.divider()
     st.slider("Nombre de résultats Jumia", 3, 10, 5, key="max_results")
     st.toggle(
@@ -61,5 +71,6 @@ with st.sidebar:
         for entree in reversed(historique[-6:]):
             st.caption(f"{BINS[entree['bin_key']]['emoji']} {entree['name']}")
 
-pages.run()
-ui.footer()
+# `choix` vaut None si l'utilisateur désélectionne l'onglet actif :
+# on retombe alors sur la première vue (Recherche).
+VUES[choix or LABELS[0]]()

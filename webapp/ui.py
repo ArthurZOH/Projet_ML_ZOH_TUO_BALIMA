@@ -1,9 +1,10 @@
-"""Composants visuels partagés de l'interface (CSS global, hero, cartes, footer).
+"""Composants visuels partagés de l'interface (CSS global, hero, cartes, navbar).
 
 Direction artistique : sombre premium façon landing page « Velocity » —
 fond noir chaud, halos orange incandescents, hero avec horizon lumineux,
-sections centrées avec sous-titre, cartes arrondies, footer en colonnes.
-Tout le CSS custom du projet vit ici pour garder les vues lisibles.
+sections centrées avec sous-titre, cartes arrondies, navbar horizontale
+à boutons coulissants. Tout le CSS custom du projet vit ici pour garder
+les vues lisibles.
 """
 
 import streamlit as st
@@ -127,35 +128,36 @@ div[data-testid="stVerticalBlockBorderWrapper"] img {
     font-size: 0.8rem;
 }
 
-/* --- Footer noir chaud en colonnes, façon landing page --- */
-.eco-footer {
-    background: #0F0A06;
-    border: 1px solid rgba(255, 140, 66, 0.2);
-    border-radius: 20px;
-    padding: 2rem 2.2rem 1rem 2.2rem;
-    margin-top: 3rem;
+/* --- Navbar horizontale : boutons segmentés coulissants --- */
+div[data-testid="stSegmentedControl"] {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.8rem;
 }
-.eco-footer-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 1.4rem;
+div[data-testid="stSegmentedControl"] [data-testid="stButtonGroup"] {
+    background: #1F1610;
+    border: 1px solid rgba(255, 140, 66, 0.22);
+    border-radius: 999px;
+    padding: 0.25rem;
 }
-.eco-footer h4 { color: #FF8C42; margin: 0 0 0.5rem 0; font-size: 0.95rem; }
-.eco-footer p, .eco-footer a, .eco-footer li {
-    color: #E8CDB8;
-    font-size: 0.85rem;
-    text-decoration: none;
+div[data-testid="stSegmentedControl"] button {
+    border-radius: 999px !important;
+    border: none !important;
+    padding: 0.45rem 1.2rem;
+    transition: background 0.3s ease, box-shadow 0.3s ease,
+                color 0.3s ease, transform 0.3s ease;
 }
-.eco-footer ul { list-style: none; padding: 0; margin: 0; }
-.eco-footer li { margin-bottom: 0.35rem; }
-.eco-footer a:hover { color: #FFFFFF; }
-.eco-footer-bottom {
-    text-align: center;
-    color: #A87F5E;
-    font-size: 0.78rem;
-    border-top: 1px solid rgba(255, 140, 66, 0.15);
-    margin-top: 1.4rem;
-    padding-top: 0.9rem;
+div[data-testid="stSegmentedControl"] button:hover {
+    transform: translateY(-1px);
+    color: #FFA45C;
+}
+/* Bouton actif : pastille orange qui « glisse » d'un onglet à l'autre */
+div[data-testid="stSegmentedControl"] button[data-testid$="Active"],
+div[data-testid="stSegmentedControl"] button[aria-checked="true"] {
+    background: linear-gradient(160deg, #FF8C42 0%, #E8722C 100%) !important;
+    color: #1A0F08 !important;
+    box-shadow: 0 0 18px rgba(255, 140, 66, 0.55);
+    font-weight: 600;
 }
 </style>
 """
@@ -201,50 +203,3 @@ def carte_produit(product: dict, key: str) -> bool:
         st.markdown(f"**{product['name']}**")
         prix(product["price"])
         return st.button("♻️ Trier ce produit", key=key, use_container_width=True)
-
-
-def footer() -> None:
-    """Footer commun à toutes les pages (colonnes façon landing page)."""
-    st.markdown(
-        """
-        <div class="eco-footer">
-          <div class="eco-footer-grid">
-            <div>
-              <h4>♻️ EcoSort-Search</h4>
-              <p>Le bon geste de tri pour chaque produit, propulsé par le
-              Deep Learning et les données Jumia.</p>
-            </div>
-            <div>
-              <h4>Navigation</h4>
-              <ul>
-                <li><a href="/" target="_self">🔍 Recherche & tri</a></li>
-                <li><a href="/stats" target="_self">📊 Mes statistiques</a></li>
-                <li><a href="/guide" target="_self">🗑️ Guide du tri</a></li>
-                <li><a href="/quiz" target="_self">🧠 Quiz du tri</a></li>
-                <li><a href="/a-propos" target="_self">ℹ️ À propos</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4>Équipe</h4>
-              <ul>
-                <li>Alice — Scraping</li>
-                <li>Arthur — Intelligence artificielle</li>
-                <li>Yannel — Application & Docker</li>
-              </ul>
-            </div>
-            <div>
-              <h4>Projet</h4>
-              <ul>
-                <li><a href="https://github.com/ArthurZOH/Projet_ML_ZOH_TUO_BALIMA">Code source (GitHub)</a></li>
-                <li>Dataset : Kaggle Garbage Classification</li>
-                <li>CI : tests + build Docker</li>
-              </ul>
-            </div>
-          </div>
-          <div class="eco-footer-bottom">
-            © 2026 EcoSort-Search — Projet pédagogique ISE2
-          </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
