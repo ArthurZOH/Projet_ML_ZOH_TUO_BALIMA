@@ -322,6 +322,18 @@ div[data-testid="stVerticalBlockBorderWrapper"] img {
     transform-origin: center;
     animation: spinSlow 18s linear infinite;
 }
+/* Logo emoji animé (page de connexion) : rotation lente + flottement */
+.eco-logo-emoji {
+    display: inline-block;
+    font-size: 3.6rem;
+    line-height: 1;
+    animation: spinSlow 12s linear infinite;
+}
+.eco-logo-wrap {
+    text-align: center;
+    margin-bottom: 0.4rem;
+    animation: floatBob 4.5s ease-in-out infinite;
+}
 @keyframes growBar { from { transform: scaleY(0); } }
 .eco-illustration .bar {
     transform-box: fill-box;

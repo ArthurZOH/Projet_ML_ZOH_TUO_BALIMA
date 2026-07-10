@@ -2,7 +2,6 @@
 
 import streamlit as st
 
-from webapp import ui
 from webapp.auth import verifier
 
 
@@ -12,8 +11,8 @@ def render() -> None:
         st.markdown("<div style='height: 6vh'></div>", unsafe_allow_html=True)
         with st.container(border=True):
             st.markdown(
-                ui.SVG_RECYCLE
-                + "<h2 style='text-align:center; margin-bottom:0;'>EcoSort-Search</h2>"
+                '<div class="eco-logo-wrap"><span class="eco-logo-emoji">♻️</span></div>'
+                "<h2 style='text-align:center; margin-bottom:0;'>EcoSort-Search</h2>"
                 "<p style='text-align:center;'>Connectez-vous pour accéder à l'application.</p>",
                 unsafe_allow_html=True,
             )
