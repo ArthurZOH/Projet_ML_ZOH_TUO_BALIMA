@@ -1,90 +1,259 @@
 """Composants visuels partagés de l'interface (CSS global, hero, cartes, navbar).
 
-Direction artistique : sombre premium façon landing page « Velocity » —
-fond noir chaud, halos orange incandescents, hero avec horizon lumineux,
-sections centrées avec sous-titre, cartes arrondies, navbar horizontale
-à boutons coulissants. Tout le CSS custom du projet vit ici pour garder
-les vues lisibles.
+Design system repris du projet « suivi-ventes » (Flask) : palette violette
+déclinée en deux thèmes (clair/sombre) via variables CSS, navbar flottante
+en pilule avec lien actif souligné, fond en dégradés radiaux, formes
+flottantes animées, cartes 18px avec élévation au survol, police DM Sans.
+Tout le CSS custom du projet vit ici pour garder les vues lisibles.
 """
 
 import streamlit as st
 
-GLOBAL_CSS = """
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
-
-html, body, .stApp, [data-testid="stSidebar"] {
-    font-family: 'Poppins', 'Segoe UI', sans-serif;
+# Variables CSS par thème — mêmes valeurs que le style.css d'origine
+PALETTES = {
+    "light": {
+        "bg-main": "#F8F4FF",
+        "bg-card": "#F2ECFA",
+        "bg-elevated": "#FFFFFF",
+        "input-bg": "#FFFFFF",
+        "border": "#DDD4EA",
+        "border-light": "#EAE3F4",
+        "text-primary": "#2B2236",
+        "text-secondary": "#635572",
+        "text-muted": "#9387A0",
+        "accent": "#5A3E85",
+        "accent-light": "#7B5CB4",
+        "accent-bg": "rgba(90,62,133,0.08)",
+        "accent-hover": "rgba(90,62,133,0.14)",
+        "navbar-bg": "rgba(255,255,255,0.95)",
+        "navbar-shadow": "rgba(43,34,54,0.06)",
+        "card-shadow": "rgba(43,34,54,0.08)",
+        "gradient-start": "rgba(184,134,255,0.12)",
+        "gradient-end": "rgba(90,62,133,0.06)",
+        "float-color": "rgba(90,62,133,0.05)",
+    },
+    "dark": {
+        "bg-main": "#171320",
+        "bg-card": "#211B2D",
+        "bg-elevated": "#211B2D",
+        "input-bg": "#2B2338",
+        "border": "#403651",
+        "border-light": "#3A3050",
+        "text-primary": "#F6F4FA",
+        "text-secondary": "#C2B8D0",
+        "text-muted": "#9187A0",
+        "accent": "#B886FF",
+        "accent-light": "#C79EFF",
+        "accent-bg": "rgba(184,134,255,0.12)",
+        "accent-hover": "rgba(184,134,255,0.20)",
+        "navbar-bg": "rgba(33,27,45,0.92)",
+        "navbar-shadow": "rgba(0,0,0,0.25)",
+        "card-shadow": "rgba(0,0,0,0.25)",
+        "gradient-start": "rgba(184,134,255,0.08)",
+        "gradient-end": "rgba(90,62,133,0.05)",
+        "float-color": "rgba(184,134,255,0.04)",
+    },
 }
 
-/* Fond général : halo ambré très discret en haut de page */
+# CSS statique : ne référence que les variables --xxx injectées par thème
+GLOBAL_CSS = """
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap');
+
+html, body, .stApp, [data-testid="stSidebar"] {
+    font-family: 'DM Sans', 'Segoe UI', sans-serif;
+    letter-spacing: -0.02em;
+}
+
+/* --- Fond : couleur du thème + double dégradé radial violet --- */
 .stApp {
+    background-color: var(--bg-main);
     background-image:
-        radial-gradient(ellipse 80% 40% at 50% 0%, rgba(232, 114, 44, 0.14), transparent 60%);
+        radial-gradient(ellipse 80% 60% at 10% 10%, var(--gradient-start) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 70% at 90% 90%, var(--gradient-end) 0%, transparent 50%);
+    background-attachment: fixed;
+    transition: background-color 0.3s;
 }
 
 /* Largeur de lecture confortable malgré le layout wide */
 div[data-testid="stMainBlockContainer"] { max-width: 1100px; }
 
-/* --- Hero : panneau noir chaud avec halo et horizon incandescent --- */
+/* --- Couleurs de texte pilotées par le thème --- */
+.stApp h1, .stApp h2, .stApp h3, .stApp h4 { color: var(--text-primary); }
+div[data-testid="stMarkdownContainer"], div[data-testid="stMarkdownContainer"] p,
+div[data-testid="stMarkdownContainer"] li, div[data-testid="stMarkdownContainer"] span {
+    color: var(--text-primary);
+}
+div[data-testid="stCaptionContainer"], div[data-testid="stCaptionContainer"] p {
+    color: var(--text-muted) !important;
+}
+div[data-testid="stWidgetLabel"] p { color: var(--text-secondary) !important; }
+[data-testid="stMetricValue"] { color: var(--text-primary); }
+[data-testid="stMetricLabel"] p { color: var(--text-secondary) !important; }
+
+/* --- Sidebar --- */
+[data-testid="stSidebar"] {
+    background: var(--bg-elevated);
+    border-right: 1px solid var(--border-light);
+    transition: background-color 0.3s;
+}
+[data-testid="stSidebar"] h2 { color: var(--text-primary); }
+
+/* --- Alertes (info/succès/erreur) : habillage neutre du thème --- */
+div[data-testid="stAlert"] {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+div[data-testid="stAlert"] * { color: var(--text-primary) !important; }
+
+/* --- Champs de saisie --- */
+div[data-baseweb="input"] {
+    background: var(--input-bg);
+    border-color: var(--border);
+}
+div[data-baseweb="input"] input { color: var(--text-primary); }
+
+/* --- Expanders --- */
+[data-testid="stExpander"] details {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+}
+[data-testid="stExpander"] summary span { color: var(--text-primary); }
+
+/* --- Navbar flottante en pilule (segmented control) --- */
+@keyframes slideDown {
+    from { transform: translateY(-24px); opacity: 0; }
+    to   { transform: translateY(0);     opacity: 1; }
+}
+div[data-testid="stSegmentedControl"] {
+    display: flex;
+    justify-content: center;
+    animation: slideDown 0.5s ease-out;
+}
+div[data-testid="stSegmentedControl"] [data-testid="stButtonGroup"] {
+    background: var(--navbar-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-light);
+    border-radius: 60px;
+    box-shadow: 0 2px 20px var(--navbar-shadow);
+    padding: 6px 8px;
+}
+div[data-testid="stSegmentedControl"] button {
+    border-radius: 40px !important;
+    border: none !important;
+    background: transparent;
+    color: var(--text-secondary);
+    font-weight: 500;
+    padding: 0.5rem 1.1rem;
+    position: relative;
+    transition: all 0.25s;
+}
+div[data-testid="stSegmentedControl"] button:hover {
+    background: var(--accent-bg);
+    color: var(--accent);
+    transform: translateY(-1px);
+}
+/* Onglet actif : fond accent + petit soulignement, comme .nav-link.active */
+div[data-testid="stSegmentedControl"] button[data-testid$="Active"],
+div[data-testid="stSegmentedControl"] button[aria-checked="true"] {
+    background: var(--accent-bg) !important;
+    color: var(--accent) !important;
+    font-weight: 600;
+}
+div[data-testid="stSegmentedControl"] button[data-testid$="Active"]::after,
+div[data-testid="stSegmentedControl"] button[aria-checked="true"]::after {
+    content: '';
+    position: absolute;
+    bottom: 3px; left: 50%;
+    transform: translateX(-50%);
+    width: 16px; height: 3px;
+    border-radius: 2px;
+    background: var(--accent);
+}
+
+/* --- Bouton de bascule de thème (rond, rotation au survol) --- */
+.st-key-theme_btn button {
+    width: 40px; height: 40px;
+    border-radius: 50% !important;
+    border: none !important;
+    background: var(--accent-bg);
+    color: var(--text-primary);
+    transition: all 0.25s;
+}
+.st-key-theme_btn button:hover {
+    background: var(--accent-hover);
+    transform: scale(1.12) rotate(15deg);
+}
+
+/* --- Hero --- */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
 .eco-hero {
     background:
-        radial-gradient(ellipse 70% 90% at 50% 115%, rgba(255, 140, 66, 0.5), transparent 60%),
-        linear-gradient(160deg, #241710 0%, #140D08 70%);
-    border: 1px solid rgba(255, 140, 66, 0.28);
-    box-shadow: 0 30px 60px -30px rgba(255, 140, 66, 0.45);
-    color: #F5EDE6;
-    padding: 2.8rem 2.4rem;
+        radial-gradient(ellipse 60% 90% at 20% 0%, var(--gradient-start) 0%, transparent 60%),
+        var(--bg-card);
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 4px var(--card-shadow);
+    color: var(--text-primary);
+    padding: 2.6rem 2.4rem;
     border-radius: 20px;
-    margin-bottom: 1.6rem;
+    margin-bottom: 1.4rem;
     text-align: center;
+    animation: fadeInUp 0.5s ease-out;
 }
 .eco-hero h1 {
-    color: #F5EDE6;
+    color: var(--text-primary);
     margin: 0;
     font-weight: 800;
-    font-size: 2.6rem;
+    font-size: 2.5rem;
     line-height: 1.15;
+    letter-spacing: -0.5px;
 }
-.eco-hero p { margin: 0.7rem 0 0 0; font-size: 1.1rem; color: #E0BFA3; }
+.eco-hero p { margin: 0.7rem 0 0 0; font-size: 1.08rem; color: var(--text-secondary); }
 .eco-highlight {
-    background: #E8722C;
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: #FFFFFF;
     padding: 0 0.45rem;
     border-radius: 10px;
-    box-shadow: 0 0 26px rgba(255, 140, 66, 0.65);
 }
 .eco-badge {
     display: inline-block;
-    border: 1px solid rgba(255, 140, 66, 0.5);
-    color: #F0C9A8;
+    background: var(--accent-bg);
+    color: var(--accent);
     padding: 0.25rem 0.9rem;
     border-radius: 999px;
     font-size: 0.85rem;
+    font-weight: 500;
     margin-bottom: 1rem;
 }
 
-/* --- Titres de section centrés avec sous-titre, façon landing page --- */
+/* --- Titres de section centrés avec sous-titre --- */
 .eco-section { text-align: center; margin: 2.2rem 0 1.2rem 0; }
 .eco-section h2 {
-    color: #F5EDE6;
+    color: var(--text-primary);
     font-weight: 800;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
-    font-size: 1.45rem;
+    font-size: 1.4rem;
     margin: 0;
 }
-.eco-section p { color: #C79A78; margin: 0.3rem 0 0 0; font-size: 0.95rem; }
+.eco-section p { color: var(--text-muted); margin: 0.3rem 0 0 0; font-size: 0.95rem; }
 
-/* --- Cartes (conteneurs avec bordure) : sombres, halo ambré au survol --- */
+/* --- Cartes (conteneurs avec bordure) : élévation au survol --- */
 div[data-testid="stVerticalBlockBorderWrapper"] {
-    background-color: #1F1610;
-    border: 1px solid rgba(255, 140, 66, 0.18);
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-light);
     border-radius: 18px;
-    transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+    box-shadow: 0 1px 4px var(--card-shadow);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 div[data-testid="stVerticalBlockBorderWrapper"]:hover {
-    box-shadow: 0 0 30px rgba(255, 140, 66, 0.3);
-    border-color: rgba(255, 140, 66, 0.55);
+    box-shadow: 0 8px 24px var(--card-shadow);
+    border-color: var(--accent);
     transform: translateY(-4px);
 }
 /* Images des cartes : hauteur homogène sans déformation, coins doux */
@@ -95,10 +264,11 @@ div[data-testid="stVerticalBlockBorderWrapper"] img {
     background: #FFFFFF;
 }
 
-.eco-prix { color: #FFA45C; font-weight: 700; font-size: 1.05rem; }
+.eco-prix { color: var(--accent); font-weight: 700; font-size: 1.05rem; }
 
 .stButton button, .stFormSubmitButton button, .stDownloadButton button {
-    border-radius: 12px;
+    border-radius: 40px;
+    transition: all 0.25s;
 }
 
 /* --- Écran résultat : apparition animée --- */
@@ -115,7 +285,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] img {
     padding: 1.4rem;
     margin-bottom: 1rem;
     min-height: 210px;
-    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 6px 22px var(--card-shadow);
 }
 .eco-bin-card h3 { margin: 0.3rem 0; color: inherit; }
 .eco-bin-card .eco-emoji { font-size: 2.2rem; }
@@ -128,47 +298,47 @@ div[data-testid="stVerticalBlockBorderWrapper"] img {
     font-size: 0.8rem;
 }
 
-/* --- Navbar horizontale : boutons segmentés coulissants --- */
-div[data-testid="stSegmentedControl"] {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 0.8rem;
+/* --- Formes flottantes décoratives (très discrètes) --- */
+@keyframes floatUp {
+    0%   { transform: translateY(100vh) rotate(0deg);   opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
 }
-div[data-testid="stSegmentedControl"] [data-testid="stButtonGroup"] {
-    background: #1F1610;
-    border: 1px solid rgba(255, 140, 66, 0.22);
-    border-radius: 999px;
-    padding: 0.25rem;
+.floating-shapes { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.floating-shapes .shape {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--float-color);
+    animation: floatUp linear infinite;
 }
-div[data-testid="stSegmentedControl"] button {
-    border-radius: 999px !important;
-    border: none !important;
-    padding: 0.45rem 1.2rem;
-    transition: background 0.3s ease, box-shadow 0.3s ease,
-                color 0.3s ease, transform 0.3s ease;
-}
-div[data-testid="stSegmentedControl"] button:hover {
-    transform: translateY(-1px);
-    color: #FFA45C;
-}
-/* Bouton actif : pastille orange qui « glisse » d'un onglet à l'autre */
-div[data-testid="stSegmentedControl"] button[data-testid$="Active"],
-div[data-testid="stSegmentedControl"] button[aria-checked="true"] {
-    background: linear-gradient(160deg, #FF8C42 0%, #E8722C 100%) !important;
-    color: #1A0F08 !important;
-    box-shadow: 0 0 18px rgba(255, 140, 66, 0.55);
-    font-weight: 600;
-}
+.floating-shapes .shape:nth-child(1) { width: 60px; height: 60px; left: 10%; animation-duration: 18s; }
+.floating-shapes .shape:nth-child(2) { width: 30px; height: 30px; left: 25%; animation-duration: 22s; animation-delay: 3s; }
+.floating-shapes .shape:nth-child(3) { width: 80px; height: 80px; left: 45%; animation-duration: 25s; animation-delay: 6s; border-radius: 20%; }
+.floating-shapes .shape:nth-child(4) { width: 40px; height: 40px; left: 65%; animation-duration: 20s; animation-delay: 2s; }
+.floating-shapes .shape:nth-child(5) { width: 50px; height: 50px; left: 80%; animation-duration: 28s; animation-delay: 5s; border-radius: 30%; }
+.floating-shapes .shape:nth-child(6) { width: 25px; height: 25px; left: 90%; animation-duration: 16s; animation-delay: 8s; }
 </style>
 """
 
+SHAPES_HTML = (
+    '<div class="floating-shapes">'
+    + '<div class="shape"></div>' * 6
+    + "</div>"
+)
 
-def inject_css() -> None:
+
+def inject_css(theme: str = "light") -> None:
+    """Injecte les variables du thème choisi puis le CSS global."""
+    palette = PALETTES.get(theme, PALETTES["light"])
+    variables = "".join(f"--{nom}: {valeur};" for nom, valeur in palette.items())
+    st.markdown(f"<style>:root {{ {variables} }}</style>", unsafe_allow_html=True)
     st.markdown(GLOBAL_CSS, unsafe_allow_html=True)
+    st.markdown(SHAPES_HTML, unsafe_allow_html=True)
 
 
 def hero(titre: str, sous_titre: str, badge: str | None = None) -> None:
-    """Bandeau d'en-tête façon landing page. `titre` peut contenir un
+    """Bandeau d'en-tête. `titre` peut contenir un
     <span class='eco-highlight'>mot surligné</span>."""
     badge_html = f'<div><span class="eco-badge">{badge}</span></div>' if badge else ""
     st.markdown(
@@ -184,7 +354,7 @@ def hero(titre: str, sous_titre: str, badge: str | None = None) -> None:
 
 
 def section(titre: str, sous_titre: str = "") -> None:
-    """Titre de section centré avec sous-titre, façon landing page."""
+    """Titre de section centré avec sous-titre."""
     sous_titre_html = f"<p>{sous_titre}</p>" if sous_titre else ""
     st.markdown(
         f'<div class="eco-section"><h2>{titre}</h2>{sous_titre_html}</div>',

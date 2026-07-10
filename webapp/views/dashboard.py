@@ -49,7 +49,7 @@ def render() -> None:
             "Produits": list(compteur.values()),
         }
     )
-    st.bar_chart(df, x="Poubelle", y="Produits", color="#E8722C", horizontal=True)
+    st.bar_chart(df, x="Poubelle", y="Produits", color="#7B5CB4", horizontal=True)
 
     # --- Détail + export ---
     with st.expander("Détail des produits triés"):

@@ -28,7 +28,9 @@ st.set_page_config(
     menu_items={"about": "EcoSort-Search — projet ISE2 (Alice, Arthur, Yannel)"},
 )
 
-ui.inject_css()
+# Thème clair/sombre : persiste en session, basculé par le bouton de la navbar
+theme = st.session_state.setdefault("theme", "light")
+ui.inject_css(theme)
 
 # Libellé de la navbar -> vue (l'ordre définit l'ordre des boutons)
 VUES = {
@@ -40,15 +42,25 @@ VUES = {
 }
 LABELS = list(VUES)
 
-# --- Navbar horizontale : boutons segmentés (glissement animé en CSS).
+# --- Navbar horizontale (pilule flottante) + bouton de thème à droite.
 # La clé de session fait persister l'onglet actif entre les reruns.
-choix = st.segmented_control(
-    "Navigation",
-    LABELS,
-    default=LABELS[0],
-    key="navbar",
-    label_visibility="collapsed",
-)
+col_nav, col_theme = st.columns([11, 1], vertical_alignment="center")
+with col_nav:
+    choix = st.segmented_control(
+        "Navigation",
+        LABELS,
+        default=LABELS[0],
+        key="navbar",
+        label_visibility="collapsed",
+    )
+with col_theme:
+    if st.button(
+        "🌙" if theme == "light" else "☀️",
+        key="theme_btn",
+        help="Changer le thème",
+    ):
+        st.session_state["theme"] = "dark" if theme == "light" else "light"
+        st.rerun()
 
 # --- Sidebar : marque + réglages + mini-historique ---
 with st.sidebar:

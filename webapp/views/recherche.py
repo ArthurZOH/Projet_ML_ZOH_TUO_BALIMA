@@ -91,7 +91,8 @@ def _ecran_resultat(selected: dict) -> None:
     st.markdown(
         f"""
         <style>
-        .stApp {{ background: {bin_info["color"]} !important; }}
+        .stApp {{ background: {bin_info["color"]} !important; background-image: none !important; }}
+        .floating-shapes {{ display: none; }}
         .ecosort-result {{ color: {bin_info["text_color"]}; }}
         </style>
         <div class="ecosort-result">
