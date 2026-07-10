@@ -1,11 +1,12 @@
+
 """EcoSort-Search — point d'entrée Streamlit.
 
 Page de garde (connexion requise), puis navigation horizontale : une barre
 de boutons coulissants en haut de page (st.segmented_control) route
-directement vers les 4 vues :
+directement vers les 3 vues :
   - Recherche & tri : mot-clé -> Jumia -> matière -> poubelle colorée
   - Mes statistiques : éco-points, niveau, répartition par poubelle
-  - Guide du tri / À propos
+  - Guide du tri
 La sidebar garde les réglages (nb résultats, historique, déconnexion).
 
 Lancement local :  streamlit run webapp/app.py
@@ -20,7 +21,7 @@ import streamlit as st
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from webapp import ui  # noqa: E402
-from webapp.views import apropos, dashboard, guide, login, recherche  # noqa: E402
+from webapp.views import dashboard, guide, login, recherche  # noqa: E402
 
 st.set_page_config(
     page_title="EcoSort-Search",
@@ -41,9 +42,8 @@ if not st.session_state.get("utilisateur"):
 # Libellé de la navbar -> vue (l'ordre définit l'ordre des boutons)
 VUES = {
     "🛒 Recherche": recherche.render,
-    "🌱 Statistiques": dashboard.render,
+    "🏆 Statistiques": dashboard.render,
     "♻️ Guide": guide.render,
-    "👥 À propos": apropos.render,
 }
 LABELS = list(VUES)
 

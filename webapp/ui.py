@@ -306,6 +306,37 @@ div[data-testid="stVerticalBlockBorderWrapper"] img {
     transition: all 0.25s;
 }
 
+/* --- Illustrations SVG : flottement doux + animations internes --- */
+@keyframes floatBob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+}
+.eco-illustration {
+    display: block;
+    margin: 0 auto 0.6rem auto;
+    animation: floatBob 4.5s ease-in-out infinite;
+}
+@keyframes spinSlow { to { transform: rotate(360deg); } }
+.eco-illustration .spin {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: spinSlow 18s linear infinite;
+}
+@keyframes growBar { from { transform: scaleY(0); } }
+.eco-illustration .bar {
+    transform-box: fill-box;
+    transform-origin: bottom;
+    animation: growBar 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) backwards;
+}
+.eco-illustration rect.bar:nth-of-type(2) { animation-delay: 0.15s; }
+.eco-illustration rect.bar:nth-of-type(3) { animation-delay: 0.30s; }
+
+/* Cartes : apparition douce à l'affichage (backwards pour ne pas
+   bloquer le transform du survol une fois l'animation finie) */
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    animation: fadeInUp 0.45s ease-out backwards;
+}
+
 /* --- Écran résultat : apparition animée --- */
 @keyframes ecoPop {
     0%   { transform: scale(0.6); opacity: 0; }
@@ -362,6 +393,41 @@ SHAPES_HTML = (
     + "</div>"
 )
 
+# --- Illustrations SVG dessinées main : elles utilisent les variables CSS
+# du thème (var(--accent)...) et sont animées par les règles .eco-illustration.
+
+# Loupe avec feuille : page Recherche
+SVG_RECHERCHE = """
+<svg class="eco-illustration" width="88" height="88" viewBox="0 0 100 100" aria-hidden="true">
+  <circle cx="42" cy="42" r="27" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="6"/>
+  <path d="M42 27 C 53 32, 55 45, 42 56 C 29 45, 31 32, 42 27 Z" fill="var(--accent)"/>
+  <line x1="42" y1="36" x2="42" y2="52" stroke="var(--bg-card)" stroke-width="3" stroke-linecap="round"/>
+  <line x1="63" y1="63" x2="84" y2="84" stroke="var(--accent)" stroke-width="9" stroke-linecap="round"/>
+</svg>
+"""
+
+# Barres qui poussent : page Statistiques
+SVG_STATS = """
+<svg class="eco-illustration" width="88" height="88" viewBox="0 0 100 100" aria-hidden="true">
+  <line x1="12" y1="88" x2="88" y2="88" stroke="var(--text-muted)" stroke-width="4" stroke-linecap="round"/>
+  <rect class="bar" x="20" y="56" width="15" height="28" rx="4" fill="var(--accent-light)"/>
+  <rect class="bar" x="43" y="40" width="15" height="44" rx="4" fill="var(--accent)"/>
+  <rect class="bar" x="66" y="22" width="15" height="62" rx="4" fill="var(--accent-light)"/>
+  <circle cx="73" cy="13" r="5" fill="var(--accent)"/>
+</svg>
+"""
+
+# Boucle de recyclage en rotation lente : page Guide et page de connexion
+SVG_RECYCLE = """
+<svg class="eco-illustration" width="88" height="88" viewBox="0 0 100 100" aria-hidden="true">
+  <g class="spin">
+    <path d="M50 14 A 36 36 0 1 1 18 62" fill="none" stroke="var(--accent)" stroke-width="8" stroke-linecap="round"/>
+    <polygon points="6,54 30,54 16,76" fill="var(--accent)"/>
+  </g>
+  <circle cx="50" cy="50" r="12" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="4"/>
+</svg>
+"""
+
 
 def inject_css(theme: str = "light") -> None:
     """Injecte les variables du thème choisi puis le CSS global."""
@@ -372,13 +438,16 @@ def inject_css(theme: str = "light") -> None:
     st.markdown(SHAPES_HTML, unsafe_allow_html=True)
 
 
-def hero(titre: str, sous_titre: str, badge: str | None = None) -> None:
+def hero(titre: str, sous_titre: str, badge: str | None = None,
+         svg: str | None = None) -> None:
     """Bandeau d'en-tête. `titre` peut contenir un
-    <span class='eco-highlight'>mot surligné</span>."""
+    <span class='eco-highlight'>mot surligné</span> ; `svg` une
+    illustration (SVG_RECHERCHE, SVG_STATS, SVG_RECYCLE...)."""
     badge_html = f'<div><span class="eco-badge">{badge}</span></div>' if badge else ""
     st.markdown(
         f"""
         <div class="eco-hero">
+            {svg or ""}
             {badge_html}
             <h1>{titre}</h1>
             <p>{sous_titre}</p>

@@ -10,8 +10,9 @@ from webapp.stats import calculer_niveau, compter_par_poubelle
 
 def render() -> None:
     ui.hero(
-        "📊 Mes statistiques",
+        "Mes <span class='eco-highlight'>statistiques</span>",
         "Votre activité de tri sur cette session.",
+        svg=ui.SVG_STATS,
     )
 
     history = st.session_state.get("history", [])

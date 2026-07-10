@@ -136,6 +136,7 @@ def render() -> None:
         "Cherchez. Triez. <span class='eco-highlight'>Recyclez.</span>",
         "L'IA qui trouve la bonne poubelle pour chaque produit Jumia.",
         badge="♻️ EcoSort-Search — projet ISE2",
+        svg=ui.SVG_RECHERCHE,
     )
 
     with st.form("recherche", border=False):

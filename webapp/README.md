@@ -14,7 +14,6 @@ horizontale (barre de boutons coulissants, `st.segmented_control`) :
 | `views/recherche.py` | Recherche Jumia → sélection → poubelle colorée |
 | `views/dashboard.py` | Statistiques de session : éco-points, niveaux, export CSV |
 | `views/guide.py` | Guide visuel des 5 poubelles + pièges classiques |
-| `views/apropos.py` | Présentation du projet et de l'équipe |
 | `stats.py` | Logique pure éco-points/niveaux, testée par pytest (`tests/`) |
 | `mocks.py` | Prédiction factice (en attendant le modèle réel) |
 

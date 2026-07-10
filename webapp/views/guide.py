@@ -34,8 +34,9 @@ def _carte_poubelle(bin_info: dict) -> None:
 
 def render() -> None:
     ui.hero(
-        "🗑️ Guide du tri",
+        "Guide du <span class='eco-highlight'>tri</span>",
         "Les 5 destinations possibles de vos déchets, et les pièges à éviter.",
+        svg=ui.SVG_RECYCLE,
     )
 
     cles = list(BINS)
