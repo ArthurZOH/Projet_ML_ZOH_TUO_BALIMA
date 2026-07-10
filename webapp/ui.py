@@ -442,17 +442,19 @@ def hero(titre: str, sous_titre: str, badge: str | None = None,
          svg: str | None = None) -> None:
     """Bandeau d'en-tête. `titre` peut contenir un
     <span class='eco-highlight'>mot surligné</span> ; `svg` une
-    illustration (SVG_RECHERCHE, SVG_STATS, SVG_RECYCLE...)."""
+    illustration (SVG_RECHERCHE, SVG_STATS, SVG_RECYCLE...).
+
+    NB : le HTML est assemblé d'un seul tenant, sans ligne vide ni
+    indentation — sinon Markdown ferme le bloc HTML et affiche la
+    suite comme du code."""
     badge_html = f'<div><span class="eco-badge">{badge}</span></div>' if badge else ""
     st.markdown(
-        f"""
-        <div class="eco-hero">
-            {svg or ""}
-            {badge_html}
-            <h1>{titre}</h1>
-            <p>{sous_titre}</p>
-        </div>
-        """,
+        '<div class="eco-hero">'
+        + (svg.strip() if svg else "")
+        + badge_html
+        + f"<h1>{titre}</h1>"
+        + f"<p>{sous_titre}</p>"
+        + "</div>",
         unsafe_allow_html=True,
     )
 
