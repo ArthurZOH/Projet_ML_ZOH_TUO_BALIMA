@@ -29,7 +29,7 @@ st.set_page_config(
 )
 
 # Thème clair/sombre : persiste en session, basculé par le bouton de la navbar
-theme = st.session_state.setdefault("theme", "light")
+theme = st.session_state.setdefault("theme", "dark")
 ui.inject_css(theme)
 
 # Libellé de la navbar -> vue (l'ordre définit l'ordre des boutons)

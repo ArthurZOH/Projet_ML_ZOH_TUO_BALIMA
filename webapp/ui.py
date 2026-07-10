@@ -1,57 +1,63 @@
 """Composants visuels partagés de l'interface (CSS global, hero, cartes, navbar).
 
-Design system repris du projet « suivi-ventes » (Flask) : palette violette
-déclinée en deux thèmes (clair/sombre) via variables CSS, navbar flottante
-en pilule avec lien actif souligné, fond en dégradés radiaux, formes
-flottantes animées, cartes 18px avec élévation au survol, police DM Sans.
+Design system repris du projet « suivi-ventes » (Flask), recoloré façon
+« Velocity » : noir chaud + orange incandescent (le clair est sa déclinaison
+crème/ambre), deux thèmes via variables CSS, navbar flottante en pilule avec
+lien actif souligné, hero à horizon lumineux, fond en dégradés radiaux,
+formes flottantes animées, cartes 18px qui s'embrasent au survol, DM Sans.
 Tout le CSS custom du projet vit ici pour garder les vues lisibles.
 """
 
 import streamlit as st
 
-# Variables CSS par thème — mêmes valeurs que le style.css d'origine
+# Variables CSS par thème — structure suivi-ventes, couleurs « Velocity »
+# (noir chaud + orange incandescent ; le clair est sa déclinaison crème/ambre)
 PALETTES = {
+    "dark": {
+        "bg-main": "#140D08",
+        "bg-card": "#1F1610",
+        "bg-elevated": "#0F0A06",
+        "input-bg": "#241710",
+        "border": "rgba(255,140,66,0.28)",
+        "border-light": "rgba(255,140,66,0.18)",
+        "text-primary": "#F5EDE6",
+        "text-secondary": "#E0BFA3",
+        "text-muted": "#A87F5E",
+        "accent": "#FF8C42",
+        "accent-light": "#FFA45C",
+        "accent-bg": "rgba(255,140,66,0.12)",
+        "accent-hover": "rgba(255,140,66,0.22)",
+        "navbar-bg": "rgba(31,22,16,0.92)",
+        "navbar-shadow": "rgba(0,0,0,0.35)",
+        "card-shadow": "rgba(0,0,0,0.35)",
+        "card-glow": "rgba(255,140,66,0.30)",
+        "hero-glow": "rgba(255,140,66,0.45)",
+        "gradient-start": "rgba(232,114,44,0.14)",
+        "gradient-end": "rgba(255,140,66,0.05)",
+        "float-color": "rgba(255,140,66,0.04)",
+    },
     "light": {
-        "bg-main": "#F8F4FF",
-        "bg-card": "#F2ECFA",
+        "bg-main": "#FAF3EC",
+        "bg-card": "#F4E8DC",
         "bg-elevated": "#FFFFFF",
         "input-bg": "#FFFFFF",
-        "border": "#DDD4EA",
-        "border-light": "#EAE3F4",
-        "text-primary": "#2B2236",
-        "text-secondary": "#635572",
-        "text-muted": "#9387A0",
-        "accent": "#5A3E85",
-        "accent-light": "#7B5CB4",
-        "accent-bg": "rgba(90,62,133,0.08)",
-        "accent-hover": "rgba(90,62,133,0.14)",
+        "border": "rgba(120,70,30,0.25)",
+        "border-light": "rgba(120,70,30,0.15)",
+        "text-primary": "#2E2018",
+        "text-secondary": "#6B5340",
+        "text-muted": "#9A8471",
+        "accent": "#E8722C",
+        "accent-light": "#FF8C42",
+        "accent-bg": "rgba(232,114,44,0.10)",
+        "accent-hover": "rgba(232,114,44,0.18)",
         "navbar-bg": "rgba(255,255,255,0.95)",
-        "navbar-shadow": "rgba(43,34,54,0.06)",
-        "card-shadow": "rgba(43,34,54,0.08)",
-        "gradient-start": "rgba(184,134,255,0.12)",
-        "gradient-end": "rgba(90,62,133,0.06)",
-        "float-color": "rgba(90,62,133,0.05)",
-    },
-    "dark": {
-        "bg-main": "#171320",
-        "bg-card": "#211B2D",
-        "bg-elevated": "#211B2D",
-        "input-bg": "#2B2338",
-        "border": "#403651",
-        "border-light": "#3A3050",
-        "text-primary": "#F6F4FA",
-        "text-secondary": "#C2B8D0",
-        "text-muted": "#9187A0",
-        "accent": "#B886FF",
-        "accent-light": "#C79EFF",
-        "accent-bg": "rgba(184,134,255,0.12)",
-        "accent-hover": "rgba(184,134,255,0.20)",
-        "navbar-bg": "rgba(33,27,45,0.92)",
-        "navbar-shadow": "rgba(0,0,0,0.25)",
-        "card-shadow": "rgba(0,0,0,0.25)",
-        "gradient-start": "rgba(184,134,255,0.08)",
-        "gradient-end": "rgba(90,62,133,0.05)",
-        "float-color": "rgba(184,134,255,0.04)",
+        "navbar-shadow": "rgba(46,32,24,0.08)",
+        "card-shadow": "rgba(46,32,24,0.10)",
+        "card-glow": "rgba(232,114,44,0.28)",
+        "hero-glow": "rgba(232,114,44,0.30)",
+        "gradient-start": "rgba(232,114,44,0.10)",
+        "gradient-end": "rgba(255,140,66,0.05)",
+        "float-color": "rgba(232,114,44,0.05)",
     },
 }
 
@@ -194,10 +200,10 @@ div[data-testid="stSegmentedControl"] button[aria-checked="true"]::after {
 }
 .eco-hero {
     background:
-        radial-gradient(ellipse 60% 90% at 20% 0%, var(--gradient-start) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 90% at 50% 115%, var(--hero-glow) 0%, transparent 60%),
         var(--bg-card);
-    border: 1px solid var(--border-light);
-    box-shadow: 0 1px 4px var(--card-shadow);
+    border: 1px solid var(--border);
+    box-shadow: 0 30px 60px -30px var(--hero-glow);
     color: var(--text-primary);
     padding: 2.6rem 2.4rem;
     border-radius: 20px;
@@ -215,10 +221,11 @@ div[data-testid="stSegmentedControl"] button[aria-checked="true"]::after {
 }
 .eco-hero p { margin: 0.7rem 0 0 0; font-size: 1.08rem; color: var(--text-secondary); }
 .eco-highlight {
-    background: linear-gradient(135deg, var(--accent), var(--accent-light));
-    color: #FFFFFF;
+    background: linear-gradient(135deg, #FF8C42, #E8722C);
+    color: #1A0F08;
     padding: 0 0.45rem;
     border-radius: 10px;
+    box-shadow: 0 0 26px rgba(255, 140, 66, 0.65);
 }
 .eco-badge {
     display: inline-block;
@@ -252,7 +259,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 div[data-testid="stVerticalBlockBorderWrapper"]:hover {
-    box-shadow: 0 8px 24px var(--card-shadow);
+    box-shadow: 0 0 28px var(--card-glow);
     border-color: var(--accent);
     transform: translateY(-4px);
 }

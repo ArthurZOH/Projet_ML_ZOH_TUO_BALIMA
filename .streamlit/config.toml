@@ -1,20 +1,22 @@
-# Thème EcoSort-Search — design system repris du projet « suivi-ventes »
-# (palette violette, mode clair par défaut ; le mode sombre est géré par
-# les variables CSS de webapp/ui.py + le bouton de bascule de la navbar)
+# Thème EcoSort-Search — structure du design system suivi-ventes,
+# couleurs « Velocity » : noir chaud + orange incandescent.
+# Mode sombre par défaut ; la bascule clair/sombre est gérée par les
+# variables CSS de webapp/ui.py + le bouton 🌙/☀️ de la navbar.
 
 [theme]
-base = "light"
-primaryColor = "#5A3E85"
-backgroundColor = "#F8F4FF"
-secondaryBackgroundColor = "#F2ECFA"
-textColor = "#2B2236"
+base = "dark"
+primaryColor = "#E8722C"
+backgroundColor = "#140D08"
+secondaryBackgroundColor = "#1F1610"
+textColor = "#F5EDE6"
 font = "sans serif"
 
+# Sidebar encore plus noire, contrôles en orange vif
 [theme.sidebar]
-backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#F2ECFA"
-textColor = "#2B2236"
-primaryColor = "#5A3E85"
+backgroundColor = "#0F0A06"
+secondaryBackgroundColor = "#241710"
+textColor = "#F5EDE6"
+primaryColor = "#FF8C42"
 
 [browser]
 gatherUsageStats = false
