@@ -2,3 +2,5 @@
 # les librairies de scraping, Deep Learning et interface (Requests/Selenium,
 # TensorFlow, Streamlit ou Flask, etc.)
 pytest==8.2.2
+requests==2.34.2
+beautifulsoup4==4.15.0
