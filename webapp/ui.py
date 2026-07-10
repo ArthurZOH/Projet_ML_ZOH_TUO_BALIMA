@@ -173,17 +173,51 @@ button[data-testid="stBaseButton-segmented_controlActive"] {
     font-weight: 600;
 }
 
+/* --- Boutons (secondaires, submit, download) : suivent le thème actif.
+   Nécessaire car le thème Streamlit du config.toml est figé en sombre,
+   alors que le mode clair est appliqué par variables CSS. --- */
+button[data-testid="stBaseButton-secondary"],
+button[data-testid="stBaseButton-secondaryFormSubmit"] {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-light) !important;
+}
+button[data-testid="stBaseButton-secondary"]:hover,
+button[data-testid="stBaseButton-secondaryFormSubmit"]:hover {
+    background: var(--accent-bg) !important;
+    color: var(--accent) !important;
+    border-color: var(--accent) !important;
+}
+button[data-testid="stBaseButton-secondary"] *,
+button[data-testid="stBaseButton-secondaryFormSubmit"] * { color: inherit !important; }
+
+/* --- Sliders : bornes et valeur lisibles dans les deux thèmes --- */
+div[data-testid="stSliderTickBarMin"],
+div[data-testid="stSliderTickBarMax"] { color: var(--text-muted) !important; }
+div[data-testid="stSliderThumbValue"] { color: var(--accent) !important; }
+
+/* --- Sidebar : textes courants et captions suivent le thème actif --- */
+[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] p,
+[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] span {
+    color: var(--text-primary) !important;
+}
+[data-testid="stSidebar"] div[data-testid="stCaptionContainer"],
+[data-testid="stSidebar"] div[data-testid="stCaptionContainer"] p,
+[data-testid="stSidebar"] div[data-testid="stCaptionContainer"] span {
+    color: var(--text-muted) !important;
+}
+
 /* --- Bouton de bascule de thème (rond, rotation au survol) --- */
 .st-key-theme_btn button {
     width: 40px; height: 40px;
     border-radius: 50% !important;
     border: none !important;
-    background: var(--accent-bg);
-    color: var(--text-primary);
+    background: var(--accent-bg) !important;
+    color: var(--text-primary) !important;
     transition: all 0.25s;
 }
 .st-key-theme_btn button:hover {
-    background: var(--accent-hover);
+    background: var(--accent-hover) !important;
     transform: scale(1.12) rotate(15deg);
 }
 
