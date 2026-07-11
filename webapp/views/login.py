@@ -1,8 +1,47 @@
-"""Page de garde : connexion requise avant d'accéder à l'application."""
+"""Page de garde : connexion ou inscription avant d'accéder à l'application."""
 
 import streamlit as st
 
-from webapp.auth import verifier
+from webapp.auth import inscrire, verifier
+
+
+def _formulaire_connexion() -> None:
+    with st.form("login", border=False):
+        identifiant = st.text_input("Identifiant", placeholder="ex. : yannel")
+        mot_de_passe = st.text_input("Mot de passe", type="password")
+        soumis = st.form_submit_button("Se connecter", use_container_width=True)
+
+    if soumis:
+        if verifier(identifiant, mot_de_passe):
+            st.session_state["utilisateur"] = identifiant.strip().lower()
+            st.rerun()
+        else:
+            st.error("Identifiant ou mot de passe incorrect.")
+
+    st.caption(
+        "Comptes de démo : alice, arthur ou yannel — mot de passe « ecosort2026 »"
+    )
+
+
+def _formulaire_inscription() -> None:
+    with st.form("inscription", border=False):
+        identifiant = st.text_input("Identifiant", placeholder="lettres et chiffres")
+        mot_de_passe = st.text_input("Mot de passe", type="password")
+        confirmation = st.text_input("Confirmez le mot de passe", type="password")
+        soumis = st.form_submit_button("Créer mon compte", use_container_width=True)
+
+    if not soumis:
+        return
+    if mot_de_passe != confirmation:
+        st.error("Les deux mots de passe ne correspondent pas.")
+        return
+    succes, message = inscrire(identifiant, mot_de_passe)
+    if succes:
+        # Connexion automatique après l'inscription
+        st.session_state["utilisateur"] = identifiant.strip().lower()
+        st.rerun()
+    else:
+        st.error(message)
 
 
 def render() -> None:
@@ -16,18 +55,10 @@ def render() -> None:
                 "<p style='text-align:center;'>Connectez-vous pour accéder à l'application.</p>",
                 unsafe_allow_html=True,
             )
-            with st.form("login", border=False):
-                identifiant = st.text_input("Identifiant", placeholder="ex. : yannel")
-                mot_de_passe = st.text_input("Mot de passe", type="password")
-                soumis = st.form_submit_button("Se connecter", use_container_width=True)
-
-            if soumis:
-                if verifier(identifiant, mot_de_passe):
-                    st.session_state["utilisateur"] = identifiant.strip().lower()
-                    st.rerun()
-                else:
-                    st.error("Identifiant ou mot de passe incorrect.")
-
-            st.caption(
-                "Comptes de démo : alice, arthur ou yannel — mot de passe « ecosort2026 »"
+            onglet_connexion, onglet_inscription = st.tabs(
+                ["Se connecter", "Créer un compte"]
             )
+            with onglet_connexion:
+                _formulaire_connexion()
+            with onglet_inscription:
+                _formulaire_inscription()
