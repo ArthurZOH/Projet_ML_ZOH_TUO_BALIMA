@@ -73,7 +73,7 @@ def render() -> None:
     )
     st.altair_chart(graphe, use_container_width=True)
 
-    # --- Détail + export ---
+    # --- Détail ---
     with st.expander("Détail des produits triés"):
         df_detail = pd.DataFrame(
             {
@@ -85,11 +85,3 @@ def render() -> None:
             }
         )
         st.dataframe(df_detail, use_container_width=True, hide_index=True)
-
-    st.download_button(
-        "⬇️ Exporter l'historique (CSV)",
-        data=pd.DataFrame(history).to_csv(index=False).encode("utf-8"),
-        file_name="ecosort_historique.csv",
-        mime="text/csv",
-        use_container_width=True,
-    )
