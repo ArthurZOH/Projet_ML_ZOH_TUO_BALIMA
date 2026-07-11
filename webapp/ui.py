@@ -114,11 +114,12 @@ div[data-testid="stAlert"] {
 div[data-testid="stAlert"] * { color: var(--text-primary) !important; }
 
 /* --- Champs de saisie : forcer aussi l'intérieur baseweb (le thème
-   Streamlit du config.toml est figé en sombre) --- */
+   Streamlit du config.toml est figé en sombre) ; sans cadre --- */
 div[data-baseweb="input"], div[data-baseweb="base-input"] {
     background: var(--input-bg) !important;
-    border-color: var(--border) !important;
+    border: none !important;
 }
+[data-testid="stForm"] { border: none !important; padding: 0 !important; }
 div[data-baseweb="input"] input {
     background: var(--input-bg) !important;
     color: var(--text-primary) !important;
@@ -147,14 +148,6 @@ button[data-testid="stBaseButton-pillsActive"] {
     color: var(--accent) !important;
 }
 
-/* --- Libellé du champ de recherche : centré (stWidgetLabel est un
-   élément <label>, ne pas préfixer par div) --- */
-.st-key-search_input [data-testid="stWidgetLabel"] {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-.st-key-search_input [data-testid="stWidgetLabel"] p { text-align: center; }
 
 /* --- Expanders --- */
 [data-testid="stExpander"] details {
@@ -212,11 +205,16 @@ button[data-testid="stBaseButton-segmented_controlActive"] {
 /* --- Boutons (secondaires, submit, download) : suivent le thème actif.
    Nécessaire car le thème Streamlit du config.toml est figé en sombre,
    alors que le mode clair est appliqué par variables CSS. --- */
-button[data-testid="stBaseButton-secondary"],
-button[data-testid="stBaseButton-secondaryFormSubmit"] {
+button[data-testid="stBaseButton-secondary"] {
     background: var(--bg-card) !important;
     color: var(--text-primary) !important;
     border: 1px solid var(--border-light) !important;
+}
+/* Boutons de formulaire (Chercher, Se connecter) : sans cadre */
+button[data-testid="stBaseButton-secondaryFormSubmit"] {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border: none !important;
 }
 button[data-testid="stBaseButton-secondary"]:hover,
 button[data-testid="stBaseButton-secondaryFormSubmit"]:hover {
