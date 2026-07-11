@@ -201,6 +201,13 @@ def render() -> None:
         "Cliquez sur un produit pour découvrir sa poubelle.",
     )
 
+    # Retour à l'accueil sans avoir à choisir un produit
+    _, col_effacer, _ = st.columns([2, 1, 2])
+    with col_effacer:
+        if st.button("✖ Effacer la recherche", use_container_width=True):
+            st.session_state.pop("last_search", None)
+            st.rerun()
+
     # Grille de cartes produits (3 colonnes)
     for ligne in range(0, len(results), 3):
         colonnes = st.columns(3)
