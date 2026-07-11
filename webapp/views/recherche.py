@@ -135,7 +135,7 @@ def render() -> None:
     ui.hero(
         "Cherchez. Triez. <span class='eco-highlight'>Recyclez.</span>",
         "L'IA qui trouve la bonne poubelle pour chaque produit Jumia.",
-        badge="♻️ EcoSort-Search — projet ISE2",
+        badge="♻️ EcoSort-Search",
         svg=ui.SVG_RECHERCHE,
     )
 
