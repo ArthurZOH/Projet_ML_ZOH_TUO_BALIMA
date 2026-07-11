@@ -12,9 +12,14 @@ data/processed/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 
-# --- Modèles entraînés (fichiers lourds .h5, .keras, .pt) ---
+# --- Modèles entraînés ---
+# On ignore le dossier par défaut (au cas où d'autres essais/checkpoints
+# plus lourds y atterrissent), MAIS on autorise explicitement le modèle
+# final livré : 9 Mo, largement sous la limite GitHub (100 Mo), utile pour
+# l'équipe et pour Docker.
 models/*
 !models/.gitkeep
+!models/modele_eco_sort.h5
 
 # --- Fichiers d'environnement / secrets ---
 .env
