@@ -93,7 +93,7 @@ div[data-testid="stMarkdownContainer"] li, div[data-testid="stMarkdownContainer"
 div[data-testid="stCaptionContainer"], div[data-testid="stCaptionContainer"] p {
     color: var(--text-muted) !important;
 }
-div[data-testid="stWidgetLabel"] p { color: var(--text-secondary) !important; }
+[data-testid="stWidgetLabel"] p { color: var(--text-secondary) !important; }
 [data-testid="stMetricValue"] { color: var(--text-primary); }
 [data-testid="stMetricLabel"] p { color: var(--text-secondary) !important; }
 
@@ -147,13 +147,14 @@ button[data-testid="stBaseButton-pillsActive"] {
     color: var(--accent) !important;
 }
 
-/* --- Libellé du champ de recherche : centré --- */
-.st-key-search_input div[data-testid="stWidgetLabel"] {
+/* --- Libellé du champ de recherche : centré (stWidgetLabel est un
+   élément <label>, ne pas préfixer par div) --- */
+.st-key-search_input [data-testid="stWidgetLabel"] {
     width: 100%;
     display: flex;
     justify-content: center;
 }
-.st-key-search_input div[data-testid="stWidgetLabel"] p { text-align: center; }
+.st-key-search_input [data-testid="stWidgetLabel"] p { text-align: center; }
 
 /* --- Expanders --- */
 [data-testid="stExpander"] details {
