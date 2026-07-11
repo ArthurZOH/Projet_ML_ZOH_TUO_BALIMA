@@ -125,12 +125,20 @@ def _ecran_resultat(selected: dict) -> None:
                 )
             st.markdown(f"[Voir le produit sur Jumia ↗]({selected['url']})")
 
-    if st.button("🔄 Nouvelle recherche", use_container_width=True):
-        # On ne vide pas toute la session : historique, recherches récentes
-        # et derniers résultats doivent survivre au retour en arrière.
-        st.session_state.pop("selected_product", None)
-        st.session_state.pop("history_recorded", None)
-        st.rerun()
+    # On ne vide jamais toute la session : historique et recherches
+    # récentes doivent survivre à la navigation.
+    col_retour, col_nouvelle = st.columns(2)
+    with col_retour:
+        if st.button("← Retour aux résultats", use_container_width=True):
+            st.session_state.pop("selected_product", None)
+            st.session_state.pop("history_recorded", None)
+            st.rerun()
+    with col_nouvelle:
+        if st.button("🔍 Nouvelle recherche", use_container_width=True):
+            st.session_state.pop("selected_product", None)
+            st.session_state.pop("history_recorded", None)
+            st.session_state.pop("last_search", None)
+            st.rerun()
 
 
 def render() -> None:
