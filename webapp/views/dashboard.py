@@ -1,5 +1,6 @@
 """Page Mes statistiques : éco-points, niveau, répartition par poubelle."""
 
+import altair as alt
 import pandas as pd
 import streamlit as st
 
@@ -48,9 +49,24 @@ def render() -> None:
                 f"{BINS[cle]['emoji']} {BINS[cle]['label']}" for cle in compteur
             ],
             "Produits": list(compteur.values()),
+            # Chaque barre prend la couleur officielle de sa poubelle
+            "Couleur": [BINS[cle]["color"] for cle in compteur],
         }
     )
-    st.bar_chart(df, x="Poubelle", y="Produits", color="#E8722C", horizontal=True)
+    graphe = (
+        alt.Chart(df)
+        .mark_bar(cornerRadiusTopLeft=8, cornerRadiusTopRight=8)
+        .encode(
+            x=alt.X("Poubelle:N", sort=None,
+                    axis=alt.Axis(title=None, labelAngle=0, labelLimit=160)),
+            y=alt.Y("Produits:Q",
+                    axis=alt.Axis(title="Produits triés", tickMinStep=1, format="d")),
+            color=alt.Color("Couleur:N", scale=None, legend=None),
+            tooltip=["Poubelle", "Produits"],
+        )
+        .properties(height=320)
+    )
+    st.altair_chart(graphe, use_container_width=True)
 
     # --- Détail + export ---
     with st.expander("Détail des produits triés"):
