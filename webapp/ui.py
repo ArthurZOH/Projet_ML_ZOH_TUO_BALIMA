@@ -149,6 +149,10 @@ button[data-testid="stBaseButton-pillsActive"] {
 }
 
 
+/* --- Onglets (page de connexion) : libellés lisibles dans les deux thèmes --- */
+div[data-testid="stTabs"] button p { color: var(--text-secondary) !important; }
+div[data-testid="stTabs"] button[aria-selected="true"] p { color: var(--accent) !important; }
+
 /* --- Expanders --- */
 [data-testid="stExpander"] details {
     background: var(--bg-card);

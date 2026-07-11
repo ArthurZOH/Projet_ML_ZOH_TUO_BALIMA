@@ -12,6 +12,9 @@ data/processed/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 
+# --- Comptes créés via l'inscription (page de garde) ---
+data/utilisateurs.json
+
 # --- Modèles entraînés (fichiers lourds .h5, .keras, .pt) ---
 models/*
 !models/.gitkeep
