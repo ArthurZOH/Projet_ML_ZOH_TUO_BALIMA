@@ -2,7 +2,15 @@
 
 import streamlit as st
 
-from webapp.auth import inscrire, verifier
+from webapp.auth import creer_jeton, inscrire, verifier
+
+
+def _ouvrir_session(identifiant: str) -> None:
+    """Connecte l'utilisateur et pose le jeton d'URL (survit au refresh)."""
+    identifiant = identifiant.strip().lower()
+    st.session_state["utilisateur"] = identifiant
+    st.query_params["session"] = creer_jeton(identifiant)
+    st.rerun()
 
 
 def _formulaire_connexion() -> None:
@@ -13,8 +21,7 @@ def _formulaire_connexion() -> None:
 
     if soumis:
         if verifier(identifiant, mot_de_passe):
-            st.session_state["utilisateur"] = identifiant.strip().lower()
-            st.rerun()
+            _ouvrir_session(identifiant)
         else:
             st.error("Identifiant ou mot de passe incorrect.")
 
@@ -37,9 +44,7 @@ def _formulaire_inscription() -> None:
         return
     succes, message = inscrire(identifiant, mot_de_passe)
     if succes:
-        # Connexion automatique après l'inscription
-        st.session_state["utilisateur"] = identifiant.strip().lower()
-        st.rerun()
+        _ouvrir_session(identifiant)  # connexion automatique après l'inscription
     else:
         st.error(message)
 

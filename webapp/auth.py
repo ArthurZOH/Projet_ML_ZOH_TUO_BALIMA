@@ -8,11 +8,13 @@ Module sans dépendance Streamlit pour rester testable par pytest.
 """
 
 import hashlib
+import hmac
 import json
 import secrets
 from pathlib import Path
 
 FICHIER_UTILISATEURS = Path("data/utilisateurs.json")
+FICHIER_CLE_SESSION = Path("data/.cle_session")
 
 # Comptes de démonstration (soutenance)
 UTILISATEURS = {
@@ -74,3 +76,38 @@ def inscrire(identifiant: str, mot_de_passe: str) -> tuple[bool, str]:
         json.dumps(inscrits, indent=2), encoding="utf-8"
     )
     return True, "Compte créé."
+
+
+# --------------------------------------------------------------------------
+# Jetons de session : Streamlit repart de zéro à chaque rafraîchissement du
+# navigateur ; un jeton signé (HMAC) placé dans l'URL permet de restaurer la
+# connexion sans pouvoir être forgé (la clé secrète reste sur le serveur).
+# --------------------------------------------------------------------------
+
+def _cle_session() -> bytes:
+    if FICHIER_CLE_SESSION.exists():
+        return bytes.fromhex(FICHIER_CLE_SESSION.read_text(encoding="utf-8"))
+    cle = secrets.token_bytes(32)
+    FICHIER_CLE_SESSION.parent.mkdir(parents=True, exist_ok=True)
+    FICHIER_CLE_SESSION.write_text(cle.hex(), encoding="utf-8")
+    return cle
+
+
+def creer_jeton(identifiant: str) -> str:
+    """Jeton « identifiant:signature » à placer dans l'URL."""
+    identifiant = _normaliser(identifiant)
+    signature = hmac.new(
+        _cle_session(), identifiant.encode("utf-8"), hashlib.sha256
+    ).hexdigest()
+    return f"{identifiant}:{signature}"
+
+
+def verifier_jeton(jeton: str) -> str | None:
+    """Renvoie l'identifiant si le jeton est authentique, sinon None."""
+    identifiant, _, signature = (jeton or "").partition(":")
+    if not identifiant or not signature:
+        return None
+    attendu = hmac.new(
+        _cle_session(), identifiant.encode("utf-8"), hashlib.sha256
+    ).hexdigest()
+    return identifiant if hmac.compare_digest(signature, attendu) else None

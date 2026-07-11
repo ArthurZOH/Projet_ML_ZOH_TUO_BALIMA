@@ -36,8 +36,16 @@ ui.inject_css(theme)
 
 # --- Page de garde : rien n'est accessible sans connexion ---
 if not st.session_state.get("utilisateur"):
-    login.render()
-    st.stop()
+    # Le rafraîchissement du navigateur réinitialise la session Streamlit :
+    # on restaure la connexion depuis le jeton signé placé dans l'URL.
+    from webapp.auth import verifier_jeton
+
+    identifiant = verifier_jeton(st.query_params.get("session", ""))
+    if identifiant:
+        st.session_state["utilisateur"] = identifiant
+    else:
+        login.render()
+        st.stop()
 
 # Libellé de la navbar -> vue (l'ordre définit l'ordre des boutons)
 VUES = {
@@ -73,6 +81,7 @@ with st.sidebar:
     st.caption(f"Connecté : **{st.session_state['utilisateur'].capitalize()}**")
     if st.button("Se déconnecter", use_container_width=True):
         st.session_state.pop("utilisateur", None)
+        st.query_params.pop("session", None)  # sinon le jeton reconnecterait
         st.rerun()
 
     st.divider()
