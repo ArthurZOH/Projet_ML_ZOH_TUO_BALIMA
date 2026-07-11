@@ -5,13 +5,14 @@ import json
 import pytest
 
 from webapp import auth
-from webapp.auth import UTILISATEURS, inscrire, verifier
+from webapp.auth import UTILISATEURS, creer_jeton, inscrire, verifier, verifier_jeton
 
 
 @pytest.fixture(autouse=True)
-def fichier_temporaire(tmp_path, monkeypatch):
-    """Chaque test travaille sur son propre fichier d'inscrits."""
+def fichiers_temporaires(tmp_path, monkeypatch):
+    """Chaque test travaille sur ses propres fichiers (inscrits + clé)."""
     monkeypatch.setattr(auth, "FICHIER_UTILISATEURS", tmp_path / "utilisateurs.json")
+    monkeypatch.setattr(auth, "FICHIER_CLE_SESSION", tmp_path / ".cle_session")
 
 
 class TestConnexion:
@@ -63,3 +64,18 @@ class TestInscription:
         assert "supersecret" not in contenu
         donnees = json.loads(contenu)
         assert set(donnees["nina"]) == {"sel", "hash"}
+
+
+class TestJetonsSession:
+    def test_jeton_valide_restaure_l_identifiant(self):
+        assert verifier_jeton(creer_jeton("Yannel ")) == "yannel"
+
+    def test_jeton_falsifie_refuse(self):
+        jeton = creer_jeton("yannel")
+        assert verifier_jeton(jeton.replace("yannel", "arthur")) is None
+        assert verifier_jeton(jeton[:-4] + "0000") is None
+
+    def test_jeton_malforme_refuse(self):
+        assert verifier_jeton("") is None
+        assert verifier_jeton("pasdedeuxpoints") is None
+        assert verifier_jeton("yannel:") is None
