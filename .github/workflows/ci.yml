@@ -19,7 +19,8 @@ jobs:
       - name: Installer les dépendances
         run: pip install -r requirements.txt
       - name: Tests unitaires
-        run: pytest tests/ -v
+        # Sans chemin : pytest.ini définit testpaths (tests/ + scraping/)
+        run: pytest -v
 
   docker:
     runs-on: ubuntu-latest
