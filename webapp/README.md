@@ -12,7 +12,7 @@ horizontale (barre de boutons coulissants, `st.segmented_control`) :
 | `auth.py` | Vérification des identifiants (comptes de démo, testé par pytest) |
 | `views/login.py` | Page de garde : formulaire de connexion |
 | `views/recherche.py` | Recherche Jumia → sélection → poubelle colorée |
-| `views/dashboard.py` | Statistiques de session : éco-points, niveaux, export CSV |
+| `views/dashboard.py` | Statistiques de session : éco-points, niveaux, graphique par poubelle |
 | `views/guide.py` | Guide visuel des 5 poubelles + pièges classiques |
 | `stats.py` | Logique pure éco-points/niveaux, testée par pytest (`tests/`) |
 | `mocks.py` | Prédiction factice (en attendant le modèle réel) |
