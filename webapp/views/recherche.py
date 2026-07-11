@@ -16,7 +16,7 @@ from scraping.scraper import (
 from utils.categories import BINS, CLASS_TO_BIN
 from utils.electronique import detect_electronique
 from webapp import ui
-from webapp.mocks import mock_predict
+from webapp.inference import predire_matiere
 
 IMAGE_PLACEHOLDER = "https://placehold.co/200x200?text=Image"
 
@@ -73,10 +73,10 @@ def _sur_pill(cle: str) -> None:
 def _ecran_resultat(selected: dict) -> None:
     """Écran coloré aux couleurs de la poubelle + récapitulatif produit."""
     if detect_electronique(selected["name"]):
-        bin_key, predicted_class = "electronique", None
+        bin_key, prediction = "electronique", None
     else:
-        predicted_class = mock_predict(selected)  # TODO: modèle réel (Étudiant B)
-        bin_key = CLASS_TO_BIN.get(predicted_class, "marron")
+        prediction = predire_matiere(selected)
+        bin_key = CLASS_TO_BIN.get(prediction["matiere"], "marron")
 
     # Enregistre le tri une seule fois (pas à chaque rerun de l'écran)
     if not st.session_state.get("history_recorded"):
@@ -112,10 +112,17 @@ def _ecran_resultat(selected: dict) -> None:
         with col_info:
             st.markdown(f"**{selected['name']}**")
             ui.prix(selected["price"])
-            if predicted_class is not None:
-                st.caption(f"Matière détectée : {predicted_class} (modèle de démonstration)")
-            else:
+            if prediction is None:
                 st.caption("Détecté comme appareil électronique (D3E)")
+            elif prediction["reel"]:
+                st.caption(
+                    f"Matière détectée : {prediction['matiere']} "
+                    f"(confiance : {prediction['confiance']:.0%})"
+                )
+            else:
+                st.caption(
+                    f"Matière détectée : {prediction['matiere']} (modèle de démonstration)"
+                )
             st.markdown(f"[Voir le produit sur Jumia ↗]({selected['url']})")
 
     if st.button("🔄 Nouvelle recherche", use_container_width=True):
