@@ -55,12 +55,17 @@ def render() -> None:
     )
     graphe = (
         alt.Chart(df)
-        .mark_bar(cornerRadiusTopLeft=8, cornerRadiusTopRight=8)
+        # Largeur de barre fixe : reste fine même avec une seule poubelle
+        .mark_bar(size=56, cornerRadiusTopLeft=8, cornerRadiusTopRight=8)
         .encode(
             x=alt.X("Poubelle:N", sort=None,
                     axis=alt.Axis(title=None, labelAngle=0, labelLimit=160)),
             y=alt.Y("Produits:Q",
-                    axis=alt.Axis(title="Produits triés", tickMinStep=1, format="d")),
+                    # Graduations explicites en entiers (sinon Altair
+                    # intercale des demi-valeurs arrondies : 0 1 1 2 2)
+                    axis=alt.Axis(title="Produits triés", format="d",
+                                  values=list(range(0, int(df["Produits"].max()) + 1))),
+            ),
             color=alt.Color("Couleur:N", scale=None, legend=None),
             tooltip=["Poubelle", "Produits"],
         )
