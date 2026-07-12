@@ -36,28 +36,30 @@ PALETTES = {
         "gradient-end": "rgba(255,140,66,0.05)",
         "float-color": "rgba(255,140,66,0.04)",
     },
+    # Thème clair « Alice » (proposé en review de la PR #2) : fond blanc,
+    # contours et accents bleus.
     "light": {
-        "bg-main": "#FAF3EC",
-        "bg-card": "#F4E8DC",
+        "bg-main": "#FFFFFF",
+        "bg-card": "#F5F8FF",
         "bg-elevated": "#FFFFFF",
         "input-bg": "#FFFFFF",
-        "border": "rgba(120,70,30,0.25)",
-        "border-light": "rgba(120,70,30,0.15)",
-        "text-primary": "#2E2018",
-        "text-secondary": "#6B5340",
-        "text-muted": "#9A8471",
-        "accent": "#E8722C",
-        "accent-light": "#FF8C42",
-        "accent-bg": "rgba(232,114,44,0.10)",
-        "accent-hover": "rgba(232,114,44,0.18)",
+        "border": "rgba(30,100,200,0.35)",
+        "border-light": "rgba(30,100,200,0.20)",
+        "text-primary": "#1B2A41",
+        "text-secondary": "#46608A",
+        "text-muted": "#7E93B8",
+        "accent": "#1E64C8",
+        "accent-light": "#4A8CE8",
+        "accent-bg": "rgba(30,100,200,0.08)",
+        "accent-hover": "rgba(30,100,200,0.16)",
         "navbar-bg": "rgba(255,255,255,0.95)",
-        "navbar-shadow": "rgba(46,32,24,0.08)",
-        "card-shadow": "rgba(46,32,24,0.10)",
-        "card-glow": "rgba(232,114,44,0.28)",
-        "hero-glow": "rgba(232,114,44,0.30)",
-        "gradient-start": "rgba(232,114,44,0.10)",
-        "gradient-end": "rgba(255,140,66,0.05)",
-        "float-color": "rgba(232,114,44,0.05)",
+        "navbar-shadow": "rgba(27,42,65,0.08)",
+        "card-shadow": "rgba(27,42,65,0.10)",
+        "card-glow": "rgba(30,100,200,0.25)",
+        "hero-glow": "rgba(30,100,200,0.22)",
+        "gradient-start": "rgba(30,100,200,0.08)",
+        "gradient-end": "rgba(74,140,232,0.05)",
+        "float-color": "rgba(30,100,200,0.05)",
     },
 }
 
@@ -287,11 +289,11 @@ div[data-testid="stSliderThumbValue"] { color: var(--accent) !important; }
 }
 .eco-hero p { margin: 0.7rem 0 0 0; font-size: 1.08rem; color: var(--text-secondary); }
 .eco-highlight {
-    background: linear-gradient(135deg, #FF8C42, #E8722C);
-    color: #1A0F08;
+    background: linear-gradient(135deg, var(--accent-light), var(--accent));
+    color: #FFFFFF;
     padding: 0 0.45rem;
     border-radius: 10px;
-    box-shadow: 0 0 26px rgba(255, 140, 66, 0.65);
+    box-shadow: 0 0 26px var(--card-glow);
 }
 .eco-badge {
     display: inline-block;
