@@ -14,7 +14,7 @@ from scraping.scraper import (
     ScraperTimeoutError,
 )
 from utils.categories import BINS, CLASS_TO_BIN
-from utils.electronique import detect_electronique
+from utils.mots_cles import detecter_poubelle
 from webapp import ui
 from webapp.inference import SEUIL_CONFIANCE, predire_matiere
 
@@ -73,20 +73,23 @@ def _sur_pill(cle: str) -> None:
 def _ecran_resultat(selected: dict) -> None:
     """Écran coloré aux couleurs de la poubelle + récapitulatif produit.
 
-    Logique décidée en réunion d'équipe (13/07) : l'image d'abord — si le
-    modèle est confiant (>= SEUIL_CONFIANCE), sa prédiction fait foi ;
-    en cas de doute, on se réfère aux mots-clés D3E du titre.
+    Cascade décidée en réunion d'équipe (13/07, complétée le 14/07) :
+      1. l'image d'abord — modèle confiant (>= SEUIL_CONFIANCE) : sa
+         prédiction fait foi ;
+      2. en cas de doute, les mots-clés du titre guident vers une des
+         5 poubelles (électronique prioritaire) ;
+      3. aucun indice : marron forcé — dans le doute, résiduels.
     """
     prediction = predire_matiere(selected)
-    incertain = False
     if prediction["reel"] and prediction["confiance"] >= SEUIL_CONFIANCE:
-        bin_key = CLASS_TO_BIN.get(prediction["matiere"], "marron")
-    elif detect_electronique(selected["name"]):
-        bin_key, prediction = "electronique", None
+        bin_key, voie = CLASS_TO_BIN.get(prediction["matiere"], "marron"), "modele"
+    elif (bin_mots := detecter_poubelle(selected["name"])) is not None:
+        bin_key, voie = bin_mots, "mots-cles"
+    elif prediction["reel"]:
+        bin_key, voie = "marron", "marron-force"
     else:
-        bin_key = CLASS_TO_BIN.get(prediction["matiere"], "marron")
-        # On avertit seulement quand le vrai modèle doute (pas le mock)
-        incertain = prediction["reel"]
+        # Mode démo (modèle absent) : on suit la prédiction factice
+        bin_key, voie = CLASS_TO_BIN.get(prediction["matiere"], "marron"), "demo"
 
     # Enregistre le tri une seule fois (pas à chaque rerun de l'écran)
     if not st.session_state.get("history_recorded"):
@@ -122,12 +125,22 @@ def _ecran_resultat(selected: dict) -> None:
         with col_info:
             st.markdown(f"**{selected['name']}**")
             ui.prix(selected["price"])
-            if prediction is None:
-                st.caption("Détecté comme appareil électronique (D3E, mots-clés)")
-            elif prediction["reel"]:
+            if voie == "modele":
                 st.caption(
                     f"Matière détectée : {prediction['matiere']} "
                     f"(confiance : {prediction['confiance']:.0%})"
+                )
+            elif voie == "mots-cles" and prediction["reel"]:
+                st.caption(
+                    f"Modèle incertain ({prediction['matiere']}, "
+                    f"{prediction['confiance']:.0%}) — orienté par les mots-clés du titre"
+                )
+            elif voie == "mots-cles":
+                st.caption("Orienté par les mots-clés du titre")
+            elif voie == "marron-force":
+                st.caption(
+                    f"Matière détectée : {prediction['matiere']} "
+                    f"({prediction['confiance']:.0%}) — non retenue"
                 )
             else:
                 st.caption(
@@ -135,10 +148,10 @@ def _ecran_resultat(selected: dict) -> None:
                 )
             st.markdown(f"[Voir le produit sur Jumia ↗]({selected['url']})")
 
-    if incertain:
+    if voie == "marron-force":
         st.warning(
-            f"Prédiction incertaine ({prediction['confiance']:.0%}) : "
-            "vérifiez la consigne — dans le doute, privilégiez la poubelle marron."
+            f"Le modèle doute ({prediction['confiance']:.0%}) et le titre ne donne "
+            "aucun indice : direction les résiduels par précaution."
         )
 
     # On ne vide jamais toute la session : historique et recherches
