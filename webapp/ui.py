@@ -105,7 +105,15 @@ div[data-testid="stCaptionContainer"], div[data-testid="stCaptionContainer"] p {
     border-right: 1px solid var(--border-light);
     transition: background-color 0.3s;
 }
-[data-testid="stSidebar"] h2 { color: var(--text-primary); }
+[data-testid="stSidebar"] h2 { color: var(--accent); }
+
+/* Curseur : suit l'accent du thème actif (le thème Streamlit du config
+   est figé au démarrage sur l'orange, on force par-dessus l'inline) */
+div[data-testid="stSlider"] div[role="slider"] { background-color: var(--accent) !important; }
+div[data-testid="stSlider"] div[style*="255, 140, 66"] {
+    background: var(--accent) !important;
+    background-image: none !important;
+}
 
 /* --- Alertes (info/succès/erreur) : habillage neutre du thème --- */
 div[data-testid="stAlert"] {
@@ -230,6 +238,19 @@ button[data-testid="stBaseButton-secondaryFormSubmit"]:hover {
 }
 button[data-testid="stBaseButton-secondary"] *,
 button[data-testid="stBaseButton-secondaryFormSubmit"] * { color: inherit !important; }
+
+/* Bouton « Trier ce produit » (dans les cartes) : vert éco, décision
+   de la réunion d'équipe du 13/07 */
+div[data-testid="stVerticalBlockBorderWrapper"] button[data-testid="stBaseButton-secondary"] {
+    background: #2E8B57 !important;
+    color: #FFFFFF !important;
+    border: none !important;
+}
+div[data-testid="stVerticalBlockBorderWrapper"] button[data-testid="stBaseButton-secondary"]:hover {
+    background: #256F45 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 0 18px rgba(46, 139, 87, 0.45);
+}
 
 /* --- Sliders : bornes et valeur lisibles dans les deux thèmes --- */
 div[data-testid="stSliderTickBarMin"],
