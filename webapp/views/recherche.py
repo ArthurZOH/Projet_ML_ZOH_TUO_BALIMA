@@ -148,12 +148,6 @@ def _ecran_resultat(selected: dict) -> None:
                 )
             st.markdown(f"[Voir le produit sur Jumia ↗]({selected['url']})")
 
-    if voie == "marron-force":
-        st.warning(
-            f"Le modèle doute ({prediction['confiance']:.0%}) et le titre ne donne "
-            "aucun indice : direction les résiduels par précaution."
-        )
-
     # On ne vide jamais toute la session : historique et recherches
     # récentes doivent survivre à la navigation.
     col_retour, col_nouvelle = st.columns(2)
