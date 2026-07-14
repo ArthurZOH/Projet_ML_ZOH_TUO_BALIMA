@@ -44,33 +44,34 @@ PALETTES = {
         "sidebar-btn-bg": "#1F1610",
         "sidebar-btn-hover": "rgba(255,140,66,0.12)",
     },
-    # Thème clair « Alice » (proposé en review de la PR #2) : fond blanc,
-    # contours et accents bleus.
+    # Thème clair « sauge » (référence : maquette app de services à
+    # domicile partagée le 14/07) : fond blanc cassé chaud, cartes
+    # blanches douces, vert sauge profond en accent, pastilles vert pâle.
     "light": {
-        "bg-main": "#FFFFFF",
-        "bg-card": "#F5F8FF",
+        "bg-main": "#F6F7F4",
+        "bg-card": "#FFFFFF",
         "bg-elevated": "#FFFFFF",
         "input-bg": "#FFFFFF",
-        "border": "rgba(30,100,200,0.35)",
-        "border-light": "rgba(30,100,200,0.20)",
-        "text-primary": "#1B2A41",
-        "text-secondary": "#46608A",
-        "text-muted": "#7E93B8",
-        "accent": "#1E64C8",
-        "accent-light": "#4A8CE8",
-        "accent-bg": "rgba(30,100,200,0.08)",
-        "accent-hover": "rgba(30,100,200,0.16)",
+        "border": "rgba(58,107,76,0.30)",
+        "border-light": "rgba(58,107,76,0.16)",
+        "text-primary": "#1C2420",
+        "text-secondary": "#4C5B52",
+        "text-muted": "#8A9990",
+        "accent": "#3A6B4C",
+        "accent-light": "#4E8862",
+        "accent-bg": "rgba(58,107,76,0.10)",
+        "accent-hover": "rgba(58,107,76,0.18)",
         "navbar-bg": "rgba(255,255,255,0.95)",
-        "navbar-shadow": "rgba(27,42,65,0.08)",
-        "card-shadow": "rgba(27,42,65,0.10)",
-        "card-glow": "rgba(30,100,200,0.25)",
-        "hero-glow": "rgba(30,100,200,0.22)",
-        "gradient-start": "rgba(30,100,200,0.08)",
-        "gradient-end": "rgba(74,140,232,0.05)",
-        "float-color": "rgba(30,100,200,0.05)",
-        # Sidebar : bleue en mode clair (contraste avec le fond blanc),
-        # textes en blanc pour rester lisibles
-        "sidebar-bg": "#1E64C8",
+        "navbar-shadow": "rgba(28,36,32,0.08)",
+        "card-shadow": "rgba(28,36,32,0.08)",
+        "card-glow": "rgba(58,107,76,0.22)",
+        "hero-glow": "rgba(58,107,76,0.20)",
+        "gradient-start": "rgba(58,107,76,0.07)",
+        "gradient-end": "rgba(78,136,98,0.05)",
+        "float-color": "rgba(58,107,76,0.05)",
+        # Sidebar : vert sauge profond en mode clair (contraste avec le
+        # fond clair), textes en blanc pour rester lisibles
+        "sidebar-bg": "#2F5940",
         "sidebar-border": "rgba(255,255,255,0.25)",
         "sidebar-text": "#FFFFFF",
         "sidebar-text-muted": "rgba(255,255,255,0.78)",
@@ -318,7 +319,10 @@ div[data-testid="stSliderThumbValue"] { color: var(--accent) !important; }
 }
 
 /* --- Bouton de bascule de thème (rond, rotation au survol) --- */
-.st-key-theme_btn button {
+/* Les deux boutons (navbar `theme_btn` et page de garde `theme_btn_login`)
+   sont rendus dans le flux, en colonne à droite : aucun positionnement
+   spécial, ils restent cliquables sous le header Streamlit. */
+.st-key-theme_btn button, .st-key-theme_btn_login button {
     width: 40px; height: 40px;
     border-radius: 50% !important;
     border: none !important;
@@ -326,10 +330,32 @@ div[data-testid="stSliderThumbValue"] { color: var(--accent) !important; }
     color: var(--text-primary) !important;
     transition: all 0.25s;
 }
-.st-key-theme_btn button:hover {
+.st-key-theme_btn button:hover, .st-key-theme_btn_login button:hover {
     background: var(--accent-hover) !important;
     transform: scale(1.12) rotate(15deg);
 }
+/* La rangée de colonnes qui porte le bouton de thème est enveloppée par
+   Streamlit dans un stVerticalBlockBorderWrapper, qui hérite du style
+   « carte » global (fond + bordure + ombre) et dessinerait une barre
+   vide. On neutralise ce style pour cette rangée uniquement (au repos et
+   au survol) afin que seul le bouton rond reste visible. */
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.st-key-theme_btn),
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.st-key-theme_btn_login),
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.st-key-theme_btn):hover,
+div[data-testid="stVerticalBlockBorderWrapper"]:has(.st-key-theme_btn_login):hover {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+/* --- Onglets --- */
+/* Le soulignement et le libellé de l'onglet actif suivent l'accent du
+   thème (var(--accent) : vert en clair « sauge », orange en sombre) au
+   lieu du primaryColor orange fixe de config.toml. */
+[data-baseweb="tab-highlight"] { background-color: var(--accent) !important; }
+button[data-baseweb="tab"][aria-selected="true"] { color: var(--accent) !important; }
+
 
 /* --- Hero --- */
 @keyframes fadeInUp {
@@ -549,6 +575,20 @@ SVG_RECYCLE = """
   <circle cx="50" cy="50" r="12" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="4"/>
 </svg>
 """
+
+
+def bouton_theme(key: str = "theme_btn") -> None:
+    """Bouton 🌙/☀️ de bascule clair/sombre, rendu en colonne à droite.
+    `theme_btn` : dans la navbar ; `theme_btn_login` : en haut de la page
+    de garde. Les deux restent dans le flux pour être cliquables."""
+    theme = st.session_state.get("theme", "dark")
+    if st.button(
+        "🌙" if theme == "light" else "☀️",
+        key=key,
+        help="Changer le thème",
+    ):
+        st.session_state["theme"] = "dark" if theme == "light" else "light"
+        st.rerun()
 
 
 def inject_css(theme: str = "light") -> None:

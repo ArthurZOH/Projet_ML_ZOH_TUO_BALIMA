@@ -1,7 +1,9 @@
-"""Page de garde : connexion ou inscription avant d'accéder à l'application."""
+"""Page de garde : connexion ou inscription avant d'accéder à l'application.
+La bascule clair/sombre est disponible dès cette page."""
 
 import streamlit as st
 
+from webapp import ui
 from webapp.auth import creer_jeton, inscrire, verifier
 
 
@@ -50,6 +52,14 @@ def _formulaire_inscription() -> None:
 
 
 def render() -> None:
+    # Bascule de thème disponible avant même la connexion. On la place en
+    # haut à droite, DANS le flux de la page (sous le header Streamlit) :
+    # placée là, elle reste cliquable, contrairement à un bouton flottant
+    # qui passe sous la barre d'outils du header.
+    _, col_theme = st.columns([11, 1], vertical_alignment="center")
+    with col_theme:
+        ui.bouton_theme(key="theme_btn_login")
+
     _, col_centre, _ = st.columns([1, 1.2, 1])
     with col_centre:
         st.markdown("<div style='height: 6vh'></div>", unsafe_allow_html=True)

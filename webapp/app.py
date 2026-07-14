@@ -67,13 +67,7 @@ with col_nav:
         label_visibility="collapsed",
     )
 with col_theme:
-    if st.button(
-        "🌙" if theme == "light" else "☀️",
-        key="theme_btn",
-        help="Changer le thème",
-    ):
-        st.session_state["theme"] = "dark" if theme == "light" else "light"
-        st.rerun()
+    ui.bouton_theme()
 
 # --- Sidebar : marque + session + réglages + mini-historique ---
 with st.sidebar:
