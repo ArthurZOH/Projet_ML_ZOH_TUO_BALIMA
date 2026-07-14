@@ -16,7 +16,7 @@ from scraping.scraper import (
 from utils.categories import BINS, CLASS_TO_BIN
 from utils.electronique import detect_electronique
 from webapp import ui
-from webapp.inference import predire_matiere
+from webapp.inference import SEUIL_CONFIANCE, predire_matiere
 
 IMAGE_PLACEHOLDER = "https://placehold.co/200x200?text=Image"
 
@@ -71,12 +71,22 @@ def _sur_pill(cle: str) -> None:
 
 
 def _ecran_resultat(selected: dict) -> None:
-    """Écran coloré aux couleurs de la poubelle + récapitulatif produit."""
-    if detect_electronique(selected["name"]):
+    """Écran coloré aux couleurs de la poubelle + récapitulatif produit.
+
+    Logique décidée en réunion d'équipe (13/07) : l'image d'abord — si le
+    modèle est confiant (>= SEUIL_CONFIANCE), sa prédiction fait foi ;
+    en cas de doute, on se réfère aux mots-clés D3E du titre.
+    """
+    prediction = predire_matiere(selected)
+    incertain = False
+    if prediction["reel"] and prediction["confiance"] >= SEUIL_CONFIANCE:
+        bin_key = CLASS_TO_BIN.get(prediction["matiere"], "marron")
+    elif detect_electronique(selected["name"]):
         bin_key, prediction = "electronique", None
     else:
-        prediction = predire_matiere(selected)
         bin_key = CLASS_TO_BIN.get(prediction["matiere"], "marron")
+        # On avertit seulement quand le vrai modèle doute (pas le mock)
+        incertain = prediction["reel"]
 
     # Enregistre le tri une seule fois (pas à chaque rerun de l'écran)
     if not st.session_state.get("history_recorded"):
@@ -113,7 +123,7 @@ def _ecran_resultat(selected: dict) -> None:
             st.markdown(f"**{selected['name']}**")
             ui.prix(selected["price"])
             if prediction is None:
-                st.caption("Détecté comme appareil électronique (D3E)")
+                st.caption("Détecté comme appareil électronique (D3E, mots-clés)")
             elif prediction["reel"]:
                 st.caption(
                     f"Matière détectée : {prediction['matiere']} "
@@ -124,6 +134,12 @@ def _ecran_resultat(selected: dict) -> None:
                     f"Matière détectée : {prediction['matiere']} (modèle de démonstration)"
                 )
             st.markdown(f"[Voir le produit sur Jumia ↗]({selected['url']})")
+
+    if incertain:
+        st.warning(
+            f"Prédiction incertaine ({prediction['confiance']:.0%}) : "
+            "vérifiez la consigne — dans le doute, privilégiez la poubelle marron."
+        )
 
     # On ne vide jamais toute la session : historique et recherches
     # récentes doivent survivre à la navigation.

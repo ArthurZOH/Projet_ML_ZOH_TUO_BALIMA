@@ -10,6 +10,11 @@ sont consommés ici : le mapping matière -> poubelle reste du ressort de
 l'interface (utils/categories.py).
 """
 
+# Décision de la réunion d'équipe du 13/07 : « se baser sur les images
+# d'abord, et s'il y a un doute se référer aux mots-clés ». En dessous de
+# ce seuil de confiance, la prédiction du modèle est considérée douteuse.
+SEUIL_CONFIANCE = 0.70
+
 
 def predire_matiere(product: dict) -> dict:
     """Prédit la matière d'un produit à partir de son image.
