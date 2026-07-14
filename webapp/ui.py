@@ -35,6 +35,14 @@ PALETTES = {
         "gradient-start": "rgba(232,114,44,0.14)",
         "gradient-end": "rgba(255,140,66,0.05)",
         "float-color": "rgba(255,140,66,0.04)",
+        # Sidebar : mêmes couleurs que le reste du thème sombre
+        "sidebar-bg": "#0F0A06",
+        "sidebar-border": "rgba(255,140,66,0.18)",
+        "sidebar-text": "#F5EDE6",
+        "sidebar-text-muted": "#A87F5E",
+        "sidebar-accent": "#FF8C42",
+        "sidebar-btn-bg": "#1F1610",
+        "sidebar-btn-hover": "rgba(255,140,66,0.12)",
     },
     # Thème clair « Alice » (proposé en review de la PR #2) : fond blanc,
     # contours et accents bleus.
@@ -60,6 +68,15 @@ PALETTES = {
         "gradient-start": "rgba(30,100,200,0.08)",
         "gradient-end": "rgba(74,140,232,0.05)",
         "float-color": "rgba(30,100,200,0.05)",
+        # Sidebar : bleue en mode clair (contraste avec le fond blanc),
+        # textes en blanc pour rester lisibles
+        "sidebar-bg": "#1E64C8",
+        "sidebar-border": "rgba(255,255,255,0.25)",
+        "sidebar-text": "#FFFFFF",
+        "sidebar-text-muted": "rgba(255,255,255,0.78)",
+        "sidebar-accent": "#FFFFFF",
+        "sidebar-btn-bg": "rgba(255,255,255,0.14)",
+        "sidebar-btn-hover": "rgba(255,255,255,0.28)",
     },
 }
 
@@ -99,18 +116,21 @@ div[data-testid="stCaptionContainer"], div[data-testid="stCaptionContainer"] p {
 [data-testid="stMetricValue"] { color: var(--text-primary); }
 [data-testid="stMetricLabel"] p { color: var(--text-secondary) !important; }
 
-/* --- Sidebar --- */
+/* --- Sidebar : palette dédiée (bleue en clair, sombre en sombre) --- */
 [data-testid="stSidebar"] {
-    background: var(--bg-elevated);
-    border-right: 1px solid var(--border-light);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--sidebar-border);
     transition: background-color 0.3s;
 }
-[data-testid="stSidebar"] h2 { color: var(--accent); }
+[data-testid="stSidebar"] h2 { color: var(--sidebar-accent); }
+[data-testid="stSidebar"] hr { border-color: var(--sidebar-border); }
 
 /* Curseur : suit l'accent du thème actif (le thème Streamlit du config
    est figé au démarrage sur l'orange, on force par-dessus l'inline) */
 div[data-testid="stSlider"] div[role="slider"] { background-color: var(--accent) !important; }
-div[data-testid="stSlider"] div[style*="255, 140, 66"] {
+div[data-testid="stSlider"] div[style*="255, 140, 66"],
+div[data-testid="stSlider"] div[style*="255,140,66"],
+div[data-testid="stSlider"] div[style*="FF8C42" i] {
     background: var(--accent) !important;
     background-image: none !important;
 }
@@ -257,15 +277,44 @@ div[data-testid="stSliderTickBarMin"],
 div[data-testid="stSliderTickBarMax"] { color: var(--text-muted) !important; }
 div[data-testid="stSliderThumbValue"] { color: var(--accent) !important; }
 
-/* --- Sidebar : textes courants et captions suivent le thème actif --- */
+/* --- Sidebar : textes, captions et widgets sur la palette dédiée --- */
 [data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] p,
 [data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] span {
-    color: var(--text-primary) !important;
+    color: var(--sidebar-text) !important;
 }
 [data-testid="stSidebar"] div[data-testid="stCaptionContainer"],
 [data-testid="stSidebar"] div[data-testid="stCaptionContainer"] p,
 [data-testid="stSidebar"] div[data-testid="stCaptionContainer"] span {
-    color: var(--text-muted) !important;
+    color: var(--sidebar-text-muted) !important;
+}
+[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p {
+    color: var(--sidebar-text) !important;
+}
+[data-testid="stSidebar"] div[data-testid="stSliderTickBarMin"],
+[data-testid="stSidebar"] div[data-testid="stSliderTickBarMax"] {
+    color: var(--sidebar-text-muted) !important;
+}
+[data-testid="stSidebar"] div[data-testid="stSliderThumbValue"] {
+    color: var(--sidebar-accent) !important;
+}
+[data-testid="stSidebar"] div[data-testid="stSlider"] div[role="slider"] {
+    background-color: var(--sidebar-accent) !important;
+}
+[data-testid="stSidebar"] div[data-testid="stSlider"] div[style*="255, 140, 66"],
+[data-testid="stSidebar"] div[data-testid="stSlider"] div[style*="255,140,66"],
+[data-testid="stSidebar"] div[data-testid="stSlider"] div[style*="FF8C42" i] {
+    background: var(--sidebar-accent) !important;
+    background-image: none !important;
+}
+[data-testid="stSidebar"] button[data-testid="stBaseButton-secondary"] {
+    background: var(--sidebar-btn-bg) !important;
+    color: var(--sidebar-text) !important;
+    border: 1px solid var(--sidebar-border) !important;
+}
+[data-testid="stSidebar"] button[data-testid="stBaseButton-secondary"]:hover {
+    background: var(--sidebar-btn-hover) !important;
+    color: var(--sidebar-text) !important;
+    border-color: var(--sidebar-text-muted) !important;
 }
 
 /* --- Bouton de bascule de thème (rond, rotation au survol) --- */
