@@ -19,6 +19,10 @@ KEYWORDS_D3E = {
     "lampe", "led", "electrique", "electronique", "ventilateur",
     "console", "ordinateur", "clavier", "souris", "enceinte", "radio",
     "televiseur", "tv", "camera", "drone", "rasoir", "ampoule",
+    # Ajouts réunion d'équipe du 13/07
+    "imprimante", "scanner", "ecran", "moniteur", "modem", "routeur",
+    "manette", "projecteur", "videoprojecteur", "webcam", "climatiseur",
+    "refrigerateur", "frigo", "congelateur", "aspirateur", "bouilloire",
 }
 
 # Expressions multi-mots, cherchées telles quelles dans le titre normalisé
@@ -26,6 +30,11 @@ PHRASES_D3E = (
     "seche cheveux",
     "fer a repasser",
     "machine a coudre",
+    # Ajouts réunion d'équipe du 13/07
+    "micro ondes",
+    "machine a laver",
+    "grille pain",
+    "fer a lisser",
 )
 
 
