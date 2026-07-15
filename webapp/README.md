@@ -15,7 +15,8 @@ horizontale (barre de boutons coulissants, `st.segmented_control`) :
 | `views/dashboard.py` | Statistiques de session : éco-points, niveaux, graphique par poubelle |
 | `views/guide.py` | Guide visuel des 5 poubelles + pièges classiques |
 | `stats.py` | Logique pure éco-points/niveaux, testée par pytest (`tests/`) |
-| `mocks.py` | Prédiction factice (en attendant le modèle réel) |
+| `inference.py` | Chargement du modèle `.h5` et prédiction de la matière (repli sur `mocks.py` si le modèle est absent) |
+| `mocks.py` | Prédiction factice, utilisée en repli quand le modèle n'est pas disponible |
 
 Framework retenu : **Streamlit** (port 8501, aligné sur la commande
 `docker run -p 8501:8501` de l'énoncé). Thème : `.streamlit/config.toml`
@@ -30,7 +31,7 @@ Comptes de démo : `alice`, `arthur`, `yannel` — mot de passe `ecosort2026`.
 - [x] Dockerfile / docker-compose (squelette)
 - [x] Intégration scraper réel (Étudiant A) -> choix utilisateur
 - [x] Design system (thèmes clair/sombre), navbar horizontale, page de connexion
-- [ ] Chargement du modèle `.h5` dans l'application (Étudiant B, PR #3)
+- [x] Chargement du modèle `.h5` dans l'application (`inference.py`, repli mocks si absent)
 
 Lancement local :
 
