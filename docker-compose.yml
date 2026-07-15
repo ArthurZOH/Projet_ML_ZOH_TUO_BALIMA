@@ -1,0 +1,8 @@
+services:
+  webapp:
+    build: .
+    image: ecosort
+    container_name: ecosort-webapp
+    ports:
+      - "8501:8501"
+    restart: unless-stopped
