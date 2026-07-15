@@ -64,8 +64,8 @@ PALETTES = {
         "navbar-bg": "rgba(255,255,255,0.95)",
         "navbar-shadow": "rgba(28,36,32,0.08)",
         "card-shadow": "rgba(28,36,32,0.08)",
-        "card-glow": "rgba(58,107,76,0.22)",
-        "hero-glow": "rgba(58,107,76,0.20)",
+        "card-glow": "rgba(58,107,76,0.40)",
+        "hero-glow": "rgba(58,107,76,0.58)",
         "gradient-start": "rgba(58,107,76,0.07)",
         "gradient-end": "rgba(78,136,98,0.05)",
         "float-color": "rgba(58,107,76,0.05)",
@@ -366,8 +366,8 @@ button[data-baseweb="tab"][aria-selected="true"] { color: var(--accent) !importa
     background:
         radial-gradient(ellipse 70% 90% at 50% 115%, var(--hero-glow) 0%, transparent 60%),
         var(--bg-card);
-    border: 1px solid var(--border);
-    box-shadow: 0 30px 60px -30px var(--hero-glow);
+    border: 2px solid var(--accent);
+    box-shadow: 0 30px 60px -30px var(--hero-glow), 0 0 55px -8px var(--hero-glow);
     color: var(--text-primary);
     padding: 2.6rem 2.4rem;
     border-radius: 20px;
