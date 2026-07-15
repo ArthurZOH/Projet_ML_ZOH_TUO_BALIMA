@@ -95,6 +95,25 @@ membres.
 
 Identifiants : alice, arthur ou yannel. Mot de passe : ecosort2026.
 
+## Choix techniques et limites
+
+Modèle : transfer learning avec MobileNetV2 (Keras/TensorFlow), entraîné sur le
+dataset Kaggle Garbage Classification (6 classes : glass, paper, cardboard,
+plastic, metal, trash), 86 pour cent d'exactitude.
+
+Scraping : solution maison en Requests et BeautifulSoup, qui renvoie 3 à 5
+résultats structurés (nom, prix, image, lien).
+
+Logique de tri : l'image prime quand le modèle est confiant (seuil de confiance).
+En cas de doute, une détection par mots-clés sur le nom du produit prend le relais,
+notamment pour le bac électronique (D3E), absent du dataset. En dernier recours, le
+produit part en poubelle marron.
+
+Limites connues : le modèle classe la matière et non l'usage (un thermos en métal
+est classé en poubelle jaune alors qu'il relèverait de la déchetterie), et il n'a
+pas de classe « inconnu » pour un produit hors des 6 classes du dataset. La cascade
+mots-clés puis marron par défaut atténue ces cas sans les supprimer totalement.
+
 ## Licence
 
 Projet académique, usage pédagogique uniquement.
