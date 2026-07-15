@@ -3,6 +3,7 @@
 # TensorFlow, Streamlit ou Flask, etc.)
 pytest==8.2.2
 
+
 # Interface web (Étudiant C)
 streamlit==1.46.0
 
